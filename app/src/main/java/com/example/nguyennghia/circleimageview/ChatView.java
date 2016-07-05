@@ -27,7 +27,7 @@ import java.util.List;
 public class ChatView extends View {
     private static final String TAG = "ChatView";
 
-    private static final int ALPHA_DEFAULT = 255;
+    private static final short ALPHA_DEFAULT = 255;
     private float mHeight;
     private float mWidth;
 
@@ -97,15 +97,15 @@ public class ChatView extends View {
     private static final int TIME_REFESH = 10;
     private static final int ALPHA_STEP = ALPHA_DEFAULT / (ANIMATION_DURATION / TIME_REFESH);
 
-    private int currentAlpha0;
-    private int currentAlpha1;
-    private int currentAlpha2;
-    private int currentAlpha3;
+    private short currentAlpha0;
+    private short currentAlpha1;
+    private short currentAlpha2;
+    private short currentAlpha3;
 
-    private int currentDefaultAlphal0 = ALPHA_DEFAULT;
-    private int currentDefaultAlphal1 = ALPHA_DEFAULT;
-    private int currentDefaultAlphal2 = ALPHA_DEFAULT;
-    private int currentDefaultAlphal3 = ALPHA_DEFAULT;
+    private short currentDefaultAlphal0 = ALPHA_DEFAULT;
+    private short currentDefaultAlphal1 = ALPHA_DEFAULT;
+    private short currentDefaultAlphal2 = ALPHA_DEFAULT;
+    private short currentDefaultAlphal3 = ALPHA_DEFAULT;
 
     private boolean mIsDrawBitmap0;
     private boolean mIsDrawBitmap1;
@@ -122,8 +122,6 @@ public class ChatView extends View {
 
     private boolean mIsDrawUnRead;
     private ImageType mImageType;
-
-    private Paint mPaintMark;
 
     public enum ImageType {
         TYPE_1, //represent for 1 bitmap in view
