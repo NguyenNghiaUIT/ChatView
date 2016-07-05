@@ -431,7 +431,7 @@ public class ChatView extends View {
 
         // TODO: 04/07/2016  Draw Divider ChatView
         if (mIsDrawDivider)
-            canvas.drawLine(0, getHeight(), getWidth() - tranX, getHeight(), mPaintDivider);
+            canvas.drawLine(0 + mTitleMarginLeft, getHeight(), getWidth() - tranX, getHeight(), mPaintDivider);
     }
 
     private void drawCircleImageBox(Canvas canvas) {
