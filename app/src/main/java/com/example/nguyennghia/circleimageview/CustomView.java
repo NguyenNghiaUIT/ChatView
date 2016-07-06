@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -52,7 +53,19 @@ public class CustomView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), 500);
+        int measureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        switch (measureSpecMode){
+            case MeasureSpec.AT_MOST:
+                Log.d(TAG, "onMeasure: AT_MOST");
+                break;
+            case MeasureSpec.EXACTLY:
+                Log.d(TAG, "onMeasure: EXACTLY");
+                break;
+            case MeasureSpec.UNSPECIFIED:
+                Log.d(TAG, "onMeasure: UNSPECIFIED");
+                break;
+        }
+      super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override

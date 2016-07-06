@@ -18,13 +18,13 @@ public class TwoCircleImageActivity extends AppCompatActivity {
         circleImage.setBitmapUrl("url", "1");
         CircleBitmapDrawable circleBitmapDrawable = new CircleBitmapDrawable(BitmapFactory.decodeResource(getResources(), R.drawable.default_ava));
         CircleColorDrawable circleColorDrawable = new CircleColorDrawable(getResources().getColor(R.color.colorAccent));
-        circleImage.setDrawableDefault(circleColorDrawable);
-        circleImage.drawUnRead("N");
+        circleImage.setDefaultDrawable(circleColorDrawable);
+        circleImage.setUnreadText("N");
 
         circleImage.postDelayed(new Runnable() {
             @Override
             public void run() {
-                circleImage.drawBitmapAt(bm, 0, true);
+                circleImage.setBitmapAt(bm, 0, true);
             }
         }, 2000);
 

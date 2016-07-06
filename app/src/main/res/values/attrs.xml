@@ -30,5 +30,9 @@
         <attr name="unread_min_height" format="dimension" />
         <attr name="unread_min_width" format="dimension" />
         <attr name="unread_text_size" format="dimension" />
+        <attr name="icon_notify_width" format="dimension"/>
+        <attr name="icon_notify_height" format="dimension" />
+        <attr name="icon_fail_width" format="dimension" />
+        <attr name="icon_fail_height" format="dimension" />
     </declare-styleable>
 </resources>

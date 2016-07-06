@@ -28,7 +28,7 @@ public class ListViewCircleImageTestActivity extends AppCompatActivity {
 
 
         File[] files = ZaloAvatarManager.getAllFiles();
-        if(files != null){
+//        if(files != null){
             mChatInfos = new ArrayList<>();
             for (int i = 0; i < 200; i++) {
                 Picture p = new Picture();
@@ -45,7 +45,7 @@ public class ListViewCircleImageTestActivity extends AppCompatActivity {
                 } else {
                     p.setUrl(files[10].getAbsolutePath(), files[11].getAbsolutePath(), files[12].getAbsolutePath(), files[13].getAbsolutePath(), files[14].getAbsolutePath());
                 }
-                mChatInfos.add(new ChatInfo("This is Title" + i, "This is content " + i, i + " minutes", p));
+                mChatInfos.add(new ChatInfo("Notice, the code do not has this error before " + i, "This is content " + i, i + " minutes", p));
             }
             mAdapter = new ChatViewAdapter(this, mChatInfos);
             lvAuthor.setAdapter(mAdapter);
@@ -53,6 +53,5 @@ public class ListViewCircleImageTestActivity extends AppCompatActivity {
         }
 
 
-
-    }
+//    }
 }

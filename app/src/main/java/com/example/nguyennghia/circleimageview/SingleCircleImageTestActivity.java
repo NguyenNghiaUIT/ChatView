@@ -86,107 +86,107 @@ public class SingleCircleImageTestActivity extends AppCompatActivity implements 
             case R.id.btn_1:
                 ci1.reset();
                 if (cb1.isChecked())
-                    ci1.drawBitmapAt(bm1, 0, true);
+                    ci1.setBitmapAt(bm1, 0, true);
                 else
-                   // ci1.drawBitmapAt(bm1, 0, false);
-                 ci1.setDrawableDefault(new CircleColorDrawable(getResources().getColor(R.color.default_color)));
+                   // ci1.setBitmapAt(bm1, 0, false);
+                 ci1.setDefaultDrawable(new CircleColorDrawable(getResources().getColor(R.color.default_color)));
 
 //                ci1.drawUnRead("N");
                 break;
             case R.id.btn_2:
                 if (cb2.isChecked()) {
-                    ci2.drawBitmapAt(bm1, 0, true);
+                    ci2.setBitmapAt(bm1, 0, true);
                     ci2.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci2.drawBitmapAt(bm2, 1, true);
+                            ci2.setBitmapAt(bm2, 1, true);
                         }
                     }, 1000);
                 } else {
-                    ci2.drawBitmapAt(bm1, 0, false);
-                    ci2.drawBitmapAt(bm2, 1, false);
+                    ci2.setBitmapAt(bm1, 0, false);
+                    ci2.setBitmapAt(bm2, 1, false);
                 }
-                ci2.drawUnRead("1");
+                ci2.setUnreadText("1");
                 break;
             case R.id.btn_3:
                 if (cb3.isChecked()) {
-                    ci3.drawBitmapAt(bm1, 0, true);
+                    ci3.setBitmapAt(bm1, 0, true);
                     ci3.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci3.drawBitmapAt(bm2, 1, true);
+                            ci3.setBitmapAt(bm2, 1, true);
                         }
                     }, 1000);
 
                     ci3.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci3.drawBitmapAt(bm3, 2, true);
+                            ci3.setBitmapAt(bm3, 2, true);
                         }
                     }, 2000);
                 } else {
-                    ci3.drawBitmapAt(bm1, 0, false);
-                    ci3.drawBitmapAt(bm2, 1, false);
-                    ci3.drawBitmapAt(bm3, 2, false);
+                    ci3.setBitmapAt(bm1, 0, false);
+                    ci3.setBitmapAt(bm2, 1, false);
+                    ci3.setBitmapAt(bm3, 2, false);
 
                 }
-                ci3.drawUnRead("2");
+                ci3.setUnreadText("2");
                 break;
             case R.id.btn_4:
                 if (cb4.isChecked()) {
-                    ci4.drawBitmapAt(bm1, 0, true);
+                    ci4.setBitmapAt(bm1, 0, true);
                     ci4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci4.drawBitmapAt(bm2, 1, true);
+                            ci4.setBitmapAt(bm2, 1, true);
                         }
                     }, 1000);
 
                     ci4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci4.drawBitmapAt(bm3, 2, true);
+                            ci4.setBitmapAt(bm3, 2, true);
                         }
                     }, 2000);
 
                     ci4.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci4.drawBitmapAt(bm4, 3, true);
+                            ci4.setBitmapAt(bm4, 3, true);
                         }
                     }, 3000);
 
 
                 } else {
-                    ci4.drawBitmapAt(bm1, 0, false);
-                    ci4.drawBitmapAt(bm2, 1, false);
-                    ci4.drawBitmapAt(bm3, 2, false);
-                    ci4.drawBitmapAt(bm4, 3, false);
+                    ci4.setBitmapAt(bm1, 0, false);
+                    ci4.setBitmapAt(bm2, 1, false);
+                    ci4.setBitmapAt(bm3, 2, false);
+                    ci4.setBitmapAt(bm4, 3, false);
                 }
-                ci4.drawUnRead("1");
+                ci4.setUnreadText("1");
                 break;
             case R.id.btn_5:
                 if (cb5.isChecked()) {
-                    ci5.drawBitmapAt(bm1, 0, true);
+                    ci5.setBitmapAt(bm1, 0, true);
                     ci5.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci5.drawBitmapAt(bm2, 1, true);
+                            ci5.setBitmapAt(bm2, 1, true);
                         }
                     }, 1000);
 
                     ci5.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ci5.drawBitmapAt(bm3, 2, true);
+                            ci5.setBitmapAt(bm3, 2, true);
                         }
                     }, 2000);
                 } else {
-                    ci5.drawBitmapAt(bm1, 0, false);
-                    ci5.drawBitmapAt(bm2, 1, false);
-                    ci5.drawBitmapAt(bm3, 2, false);
+                    ci5.setBitmapAt(bm1, 0, false);
+                    ci5.setBitmapAt(bm2, 1, false);
+                    ci5.setBitmapAt(bm3, 2, false);
                 }
-                ci5.drawUnRead("5+");
+                ci5.setUnreadText("5+");
                 break;
             default:
                 break;

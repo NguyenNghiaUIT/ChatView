@@ -2,12 +2,33 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
 
     tools:context="com.example.nguyennghia.circleimageview.TestActivity">
 
-    <com.example.nguyennghia.circleimageview.CustomView
-        android:layout_width="300dp"
-        android:paddingLeft="30dp"
-        android:layout_height="300dp" />
+    <FrameLayout
+        android:background="#589f58"
+        android:layout_width="600dp"
+        android:layout_height="match_parent">
+        <com.example.nguyennghia.circleimageview.CustomView
+            android:background="#6e1414"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+    <!--<LinearLayout-->
+        <!--android:background="#54a77c"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp">-->
+
+    <!--</LinearLayout>-->
+    <!--<com.example.nguyennghia.circleimageview.CustomView-->
+        <!--android:background="#a13d3d"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="300dp" />-->
+    <!---->
+    <!--<LinearLayout-->
+        <!--android:background="#276662"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"></LinearLayout>-->
 </FrameLayout>

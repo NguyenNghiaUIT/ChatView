@@ -3,6 +3,8 @@ package com.example.nguyennghia.circleimageview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,11 +28,15 @@ import java.util.List;
 /**
  * Created by nguyennghia on 05/07/2016.
  */
+
 public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
     private static final String TAG = "ChatViewAdapter";
     private Context mContext;
     private List<ChatInfo> mChatInfos;
     private CircleColorDrawable mCircleColorDrawable;
+    private ColorDrawable mColorDrawable;
+    private BitmapDrawable mNotifyDrawable;
+    private BitmapDrawable mFailDrawable;
     // private CircleBitmapDrawable mCircleBitmapDrawable;
 
     public ChatViewAdapter(Context context, List<ChatInfo> objects) {
@@ -38,6 +44,10 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         mContext = context;
         mChatInfos = objects;
         mCircleColorDrawable = new CircleColorDrawable(context.getResources().getColor(R.color.colorAccent));
+        mColorDrawable = new ColorDrawable(context.getResources().getColor(R.color.colorPrimary));
+        mNotifyDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.notify));
+        mFailDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.fail));
+
         //mCircleBitmapDrawable = new CircleBitmapDrawable(BitmapFactory.decodeResource(context.getResources() ,R.drawable.default_ava));
     }
 
@@ -59,13 +69,18 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             viewHolder.ciAvaAuthor.reset();
         }
 
-        viewHolder.ciAvaAuthor.setBitmapUrl(picture.getUrls());
-        viewHolder.ciAvaAuthor.drawUnRead("2");
-        viewHolder.ciAvaAuthor.setStatus(chatInfo.getStatus());
-        viewHolder.ciAvaAuthor.setDrawableDefault(mCircleColorDrawable);
+        viewHolder.ciAvaAuthor.setBitmapUrls(picture.getUrls());
+        viewHolder.ciAvaAuthor.setUnreadText("2");
+        viewHolder.ciAvaAuthor.setStatusTextBold(false);
+        viewHolder.ciAvaAuthor.setTitleTextBold(false);
+        viewHolder.ciAvaAuthor.setContentTextBold(false);
+        viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
+        viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
+        viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
 //        viewHolder.ciAvaAuthor.setDrawableDefault(mCircleBitmapDrawable);
         viewHolder.ciAvaAuthor.setTitle(chatInfo.getTitle());
         viewHolder.ciAvaAuthor.setContent(chatInfo.getContent());
+        viewHolder.ciAvaAuthor.setStatus(chatInfo.getStatus());
 
         int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
         for (int i = 0; i < size; i++) {
@@ -75,12 +90,11 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             }
 
             if (picture.getIsAnimation()[i]) {
-                viewHolder.ciAvaAuthor.drawBitmapAt(picture.getBitmaps()[i], i, true);
+                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
                 picture.getIsAnimation()[i] = false;
             }else{
-                viewHolder.ciAvaAuthor.drawBitmapAt(picture.getBitmaps()[i], i, false);
+                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
             }
-
         }
 
 //        for (int i = 0; i < size; i++) {

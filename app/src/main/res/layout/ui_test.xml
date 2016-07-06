@@ -14,7 +14,7 @@
         <!--android:layout_height="wrap_content" />-->
 
     <TextView
-        android:padding="10dp"
+        android:padding="20dp"
         android:background="#5e0d0d"
         android:text="NguyenVanNghia"
         android:layout_width="wrap_content"
