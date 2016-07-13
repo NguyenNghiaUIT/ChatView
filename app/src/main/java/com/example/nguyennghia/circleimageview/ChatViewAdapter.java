@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
 
 import com.example.nguyennghia.circleimageview.model.ChatInfo;
 import com.example.nguyennghia.circleimageview.model.Picture;
@@ -47,8 +45,6 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         mColorDrawable = new ColorDrawable(context.getResources().getColor(R.color.colorPrimary));
         mNotifyDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.notify));
         mFailDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.fail));
-
-        //mCircleBitmapDrawable = new CircleBitmapDrawable(BitmapFactory.decodeResource(context.getResources() ,R.drawable.default_ava));
     }
 
     @Override
@@ -70,17 +66,18 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         }
 
         viewHolder.ciAvaAuthor.setBitmapUrls(picture.getUrls());
-        viewHolder.ciAvaAuthor.setUnreadText("2");
+        viewHolder.ciAvaAuthor.setUnreadText("N");
         viewHolder.ciAvaAuthor.setStatusTextBold(false);
         viewHolder.ciAvaAuthor.setTitleTextBold(false);
         viewHolder.ciAvaAuthor.setContentTextBold(false);
-        viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
-        viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
-        viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
-//        viewHolder.ciAvaAuthor.setDrawableDefault(mCircleBitmapDrawable);
+
         viewHolder.ciAvaAuthor.setTitle(chatInfo.getTitle());
         viewHolder.ciAvaAuthor.setContent(chatInfo.getContent());
         viewHolder.ciAvaAuthor.setStatus(chatInfo.getStatus());
+        viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
+        viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
+        viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
+        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(ChatView.TOTAL_MEMBER_CIRCLE);
 
         int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
         for (int i = 0; i < size; i++) {
@@ -89,12 +86,17 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
                 picture.getLoadeds()[i] = true;
             }
 
-            if (picture.getIsAnimation()[i]) {
-                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
-                picture.getIsAnimation()[i] = false;
+            if(!picture.getBitmaps()[i].isRecycled()){
+                if (picture.getIsAnimation()[i]) {
+                    viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
+                    picture.getIsAnimation()[i] = false;
+                }else{
+                    viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
+                }
             }else{
-                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
+                Log.e(TAG, "Default"  );
             }
+
         }
 
 //        for (int i = 0; i < size; i++) {
@@ -120,7 +122,6 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
     }
 
     static class ViewHolder {
-        private TextView tvAuthor;
         private ChatView ciAvaAuthor;
     }
 
