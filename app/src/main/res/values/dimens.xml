@@ -16,8 +16,7 @@
     <dimen name="padding_top_bottom_chat_view">3dp</dimen>
     <dimen name="title_margin_top">3dp</dimen>
     <dimen name="chat_view_divider_size">1px</dimen>
-
-    <dimen name="font_demo">11dp</dimen>
+    <dimen name="total_member_font_size">11dp</dimen>
 
     <dimen name="title_font_size">18dp</dimen>
     <dimen name="status_font_size">12dp</dimen>
