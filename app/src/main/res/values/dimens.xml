@@ -16,7 +16,7 @@
     <dimen name="padding_top_bottom_chat_view">3dp</dimen>
     <dimen name="title_margin_top">3dp</dimen>
     <dimen name="chat_view_divider_size">1px</dimen>
-    <dimen name="total_member_font_size">11dp</dimen>
+    <dimen name="total_member_font_size">15dp</dimen>
 
     <dimen name="title_font_size">18dp</dimen>
     <dimen name="status_font_size">12dp</dimen>
@@ -26,6 +26,13 @@
     <dimen name="chatview_icon_notify_height">20dp</dimen>
 
     <dimen name="chatview_icon_fail_width">20dp</dimen>
-    <dimen name="chatview_icon_fail_hight">20dp</dimen>
+    <dimen name="chatview_icon_fail_height">20dp</dimen>
+
+    <!--define font size default for chatview-->
+    <dimen name="micro_font_size">12sp</dimen>
+    <dimen name="small_font_size">14sp</dimen>
+    <dimen name="medium_font_size">18sp</dimen>
+    <dimen name="large_font_size">22sp</dimen>
+
 
 </resources>
