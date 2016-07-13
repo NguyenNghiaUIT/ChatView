@@ -136,12 +136,6 @@ public class ChatView extends View {
     private static final int AVATAR_FOUR_BITMAP = 4;
     private static final int AVATAR_THREE_BITMAP_AND_TEXT = 5;
 
-
-    public void setDefaultDrawable(Drawable drawableDefault) {
-        mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
-        invalidate();
-    }
-
     public ChatView(Context context) {
         this(context, null);
     }
@@ -200,6 +194,11 @@ public class ChatView extends View {
         }
     }
 
+    public void setDefaultDrawable(Drawable drawableDefault) {
+        mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
+        invalidate();
+    }
+
     public void setUnreadText(String text) {
         if (mUnReadPaint == null) {
             mUnReadPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -221,7 +220,6 @@ public class ChatView extends View {
         mCurrentDrawable0 = mCurrentDrawable1 = mCurrentDrawable2 = mCurrentDrawable3 = ALPHA_DEFAULT;
         mCurrentBitmapAlpha0 = mCurrentBitmapAlpha1 = mCurrentBitmapAlpha2 = mCurrentBitmapAlpha3 = 0;
         mIsDrawBitmap0 = mIsDrawBitmap1 = mIsDrawBitmap2 = mIsDrawBitmap3 = false;
-        mIsAnimation0 = mIsAnimation1 = mIsAnimation2 = mIsAnimation3 = false;
 
         mIsDrawUnRead = mIsDrawDivider = false;
         mUnReadText = null;
@@ -234,7 +232,6 @@ public class ChatView extends View {
             mTitlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
             mTitlePaint.setTextSize(mTitleTextSize);
             mTitlePaint.setColor(mTitleTextColor);
-
         }
         mTitleText = text;
         invalidate();
@@ -295,20 +292,25 @@ public class ChatView extends View {
     }
 
     public void setIconNotifyDrawable(Drawable drawable) {
-        mIsDrawIconNotifyDrawable = true;
-        mIconNotifyDrawable = drawable;
-        invalidate();
+        if(drawable != null){
+            mIsDrawIconNotifyDrawable = true;
+            mIconNotifyDrawable = drawable;
+            invalidate();
+        }
     }
 
     public void setBitmapUrls(List<String> urls) {
-        mSize = urls.size();
-        configWidthAndHeightCircleImage();
-
+        if(urls != null){
+            mSize = urls.size();
+            configWidthAndHeightCircleImage();
+        }
     }
 
     public void setBitmapUrls(String... urls) {
-        mSize = urls.length;
-        configWidthAndHeightCircleImage();
+        if(urls != null){
+            mSize = urls.length;
+            configWidthAndHeightCircleImage();
+        }
     }
 
     //Method only using for draw one bitmap and text
@@ -387,10 +389,9 @@ public class ChatView extends View {
     }
 
     public void setBitmapAt(Bitmap bitmap, int index, boolean animation) {
-        if (index > mSize - 1)
+        if (index > mSize - 1 || bitmap == null)
             return;
-        if (bitmap == null)
-            return;
+
         if (mBitmaps != null) {
             mBitmaps[index] = bitmap;
             switch (index) {
@@ -414,10 +415,7 @@ public class ChatView extends View {
             Log.d(TAG, "setBitmapAt: ");
             invalidate();
         }
-
-
         // mBitmapPaints[index].setShader(new BitmapShader(centerCropImage(bitmap, mItemAvatarWidth, mItemAvatarHeight), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-
     }
 
 //    private Bitmap centerCropImage(Bitmap src, float widthView, float heightView) {
@@ -508,10 +506,6 @@ public class ChatView extends View {
             mIconNotifyDrawable.draw(canvas);
         }
 
-        Log.d(TAG, "onDraw: " + mIsAnimation0);
-        Log.d(TAG, "onDraw: " + mIsAnimation1);
-        Log.d(TAG, "onDraw: " + mIsAnimation2);
-        Log.d(TAG, "onDraw: " + mIsAnimation3);
         if (mIsAnimation0 || mIsAnimation1 || mIsAnimation2 || mIsAnimation3) {
             postInvalidateDelayed(TIME_REFESH);
         }
@@ -904,7 +898,6 @@ public class ChatView extends View {
             mCurrentBitmapAlpha1 += ALPHA_STEP;
             mCurrentDrawable1 -= ALPHA_STEP;
         }
-
     }
 
     private void processAnimationBitmap2(Canvas canvas, float radius, float tranX, float tranY) {
