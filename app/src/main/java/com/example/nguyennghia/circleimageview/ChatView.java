@@ -1,7 +1,6 @@
 package com.example.nguyennghia.circleimageview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -29,6 +28,16 @@ public class ChatView extends View {
     private static final int ANIMATION_DURATION = 300;
     private static final int TIME_REFESH = 10;
     private static final int ALPHA_STEP = ALPHA_DEFAULT / (ANIMATION_DURATION / TIME_REFESH);
+
+    public static final int AVATAR_ONE_BITMAP = 0;
+    public static final int AVATAR_ONE_BITMAP_AND_TEXT = 1;
+    public static final int AVATAR_TWO_BITMAP = 2;
+    public static final int AVATAR_THREE_BITMAP = 3;
+    public static final int AVATAR_FOUR_BITMAP = 4;
+    public static final int AVATAR_THREE_BITMAP_AND_TEXT = 5;
+
+    public static final int TOTAL_MEMBER_CIRCLE = 0;
+    public static final int TOTAL_MEMBER_SQUARE = 1;
 
     private float mAvatarBoxWidth;
     private float mAvatarBoxHeight;
@@ -85,11 +94,13 @@ public class ChatView extends View {
     private boolean mIsDrawDivider;
 
     private float mHeightDraw;
-    private Resources mResource;
     private String mTotalMemberText;
     private TextPaint mTotalMemberTextPaint;
     private Paint mTotalMemberPaint;
-    private Rect mRectBoundText;
+    private int mTotalMemberColor;
+    private int mTotalMemberTextSize;
+    private int mTotalMemberTextColor;
+    private int mTotalMemberDrawType = TOTAL_MEMBER_CIRCLE;
 
     private boolean mIsAnimation0;
     private boolean mIsAnimation1;
@@ -126,15 +137,11 @@ public class ChatView extends View {
     private int mIconFailDrawableWidth;
     private int mIconFailDrawableHeight;
 
-    private Rect mDrawableBound = new Rect();
+    private Rect mRectBoundText;
+    private Rect mItemAvatarBoxBound = new Rect();
 
     private int mAvatarType;
-    private static final int AVATAR_ONE_BITMAP = 0;
-    private static final int AVATAR_ONE_BITMAP_AND_TEXT = 1;
-    private static final int AVATAR_TWO_BITMAP = 2;
-    private static final int AVATAR_THREE_BITMAP = 3;
-    private static final int AVATAR_FOUR_BITMAP = 4;
-    private static final int AVATAR_THREE_BITMAP_AND_TEXT = 5;
+
 
     public ChatView(Context context) {
         this(context, null);
@@ -146,56 +153,61 @@ public class ChatView extends View {
 
     public ChatView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mResource = getResources();
+
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChatView, 0, 0);
-        if (a != null) {
-            try {
-                mTitleMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_left, 0);
-                mTitleMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_top, 0);
-                mTitleMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_right, 0);
-                mTitleMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_bottom, 0);
-                mTitleTextColor = a.getColor(R.styleable.ChatView_title_color, Color.BLACK);
-                mTitleTextSize = a.getDimensionPixelSize(R.styleable.ChatView_title_text_size, 30);
+        try {
+            mTitleMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_left, 0);
+            mTitleMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_top, 0);
+            mTitleMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_right, 0);
+            mTitleMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_bottom, 0);
+            mTitleTextColor = a.getColor(R.styleable.ChatView_title_color, Color.BLACK);
+            mTitleTextSize = a.getDimensionPixelSize(R.styleable.ChatView_title_text_size, 30);
 
-                mContentMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_left, 0);
-                mContentMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_top, 0);
-                mContentMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_right, 0);
-                mContentMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_bottom, 0);
-                mContentTextColor = a.getColor(R.styleable.ChatView_content_color, Color.BLACK);
-                mContentTextSize = a.getDimensionPixelSize(R.styleable.ChatView_content_text_size, 30);
+            mContentMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_left, 0);
+            mContentMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_top, 0);
+            mContentMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_right, 0);
+            mContentMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_bottom, 0);
+            mContentTextColor = a.getColor(R.styleable.ChatView_content_color, Color.BLACK);
+            mContentTextSize = a.getDimensionPixelSize(R.styleable.ChatView_content_text_size, 30);
 
-                mStatusMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_left, 0);
-                mStatusMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_top, 0);
-                mStatusMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_right, 0);
-                mStatusMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_bottom, 0);
-                mStatusTextColor = a.getColor(R.styleable.ChatView_status_color, Color.BLACK);
-                mStatusTextSize = a.getDimensionPixelSize(R.styleable.ChatView_status_text_size, 30);
+            mStatusMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_left, 0);
+            mStatusMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_top, 0);
+            mStatusMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_right, 0);
+            mStatusMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_bottom, 0);
+            mStatusTextColor = a.getColor(R.styleable.ChatView_status_color, Color.BLACK);
+            mStatusTextSize = a.getDimensionPixelSize(R.styleable.ChatView_status_text_size, 30);
 
-                mDividerColor = a.getColor(R.styleable.ChatView_divider_color, Color.GRAY);
-                mDividerHeight = a.getDimensionPixelSize(R.styleable.ChatView_divider_height, 1);
+            mTotalMemberColor = a.getColor(R.styleable.ChatView_total_member_color, Color.GRAY);
+            mTotalMemberTextSize = a.getDimensionPixelSize(R.styleable.ChatView_total_member_text_size, 30);
+            mTotalMemberTextColor = a.getColor(R.styleable.ChatView_total_member_text_color, Color.parseColor("#ecf0f1"));
 
-                mUnreadColor = a.getColor(R.styleable.ChatView_unread_color, Color.RED);
-                mPaddingUnread = a.getDimensionPixelSize(R.styleable.ChatView_unread_padding, 0);
-                mUnreadTextColor = a.getColor(R.styleable.ChatView_unread_text_color, Color.WHITE);
-                mUnreadTextSize = a.getDimensionPixelSize(R.styleable.ChatView_unread_text_size, 10);
-                mUnreadMinWidth = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_width, 0);
-                mUnreadMinHeight = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_height, 0);
+            mDividerColor = a.getColor(R.styleable.ChatView_divider_color, Color.GRAY);
+            mDividerHeight = a.getDimensionPixelSize(R.styleable.ChatView_divider_height, 1);
+            mUnreadColor = a.getColor(R.styleable.ChatView_unread_color, Color.RED);
+            mPaddingUnread = a.getDimensionPixelSize(R.styleable.ChatView_unread_padding, 0);
+            mUnreadTextColor = a.getColor(R.styleable.ChatView_unread_text_color, Color.WHITE);
+            mUnreadTextSize = a.getDimensionPixelSize(R.styleable.ChatView_unread_text_size, 10);
+            mUnreadMinWidth = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_width, 0);
+            mUnreadMinHeight = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_height, 0);
 
-                mIconFailDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_width, 0);
-                mIconFailDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_height, 0);
+            mIconFailDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_width, 0);
+            mIconFailDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_height, 0);
 
-                mIconNotifyDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_width, 0);
-                mIconNotifyDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_height, 0);
-            } finally {
-                a.recycle();
-            }
+            mIconNotifyDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_width, 0);
+            mIconNotifyDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_height, 0);
 
-            mAvatarBoxWidth = mAvatarBoxHeight = mResource.getDimension(R.dimen.height_width_avatar_box);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            a.recycle();
         }
+
+        mAvatarBoxWidth = mAvatarBoxHeight = getResources().getDimension(R.dimen.height_width_avatar_box);
     }
 
+
     public void setDefaultDrawable(Drawable drawableDefault) {
-        if(drawableDefault != null) {
+        if (drawableDefault != null) {
             mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
             invalidate();
         }
@@ -222,6 +234,8 @@ public class ChatView extends View {
         mCurrentDrawable0 = mCurrentDrawable1 = mCurrentDrawable2 = mCurrentDrawable3 = ALPHA_DEFAULT;
         mCurrentBitmapAlpha0 = mCurrentBitmapAlpha1 = mCurrentBitmapAlpha2 = mCurrentBitmapAlpha3 = 0;
         mIsDrawBitmap0 = mIsDrawBitmap1 = mIsDrawBitmap2 = mIsDrawBitmap3 = false;
+        mIsAnimation0 = mIsAnimation1 = mIsAnimation2 = mIsAnimation3 = false;
+
 
         mIsDrawUnRead = mIsDrawDivider = false;
         mUnReadText = null;
@@ -236,7 +250,7 @@ public class ChatView extends View {
             mTitlePaint.setColor(mTitleTextColor);
         }
 
-        if(text != null){
+        if (text != null) {
             mTitleText = text;
             invalidate();
         }
@@ -249,7 +263,7 @@ public class ChatView extends View {
             mContentPaint.setColor(mContentTextColor);
         }
 
-        if(text != null){
+        if (text != null) {
             mContentText = text;
             invalidate();
         }
@@ -262,7 +276,7 @@ public class ChatView extends View {
             mStatusPaint.setColor(mStatusTextColor);
         }
 
-        if(text != null){
+        if (text != null) {
             mStatusText = text;
             invalidate();
         }
@@ -297,7 +311,7 @@ public class ChatView extends View {
     }
 
     public void setIconFailDrawable(Drawable drawable) {
-        if(drawable != null){
+        if (drawable != null) {
             mIconFailDrawable = drawable;
             mIsDrawIconFailDrawable = true;
             invalidate();
@@ -305,7 +319,7 @@ public class ChatView extends View {
     }
 
     public void setIconNotifyDrawable(Drawable drawable) {
-        if(drawable != null){
+        if (drawable != null) {
             mIsDrawIconNotifyDrawable = true;
             mIconNotifyDrawable = drawable;
             invalidate();
@@ -313,14 +327,14 @@ public class ChatView extends View {
     }
 
     public void setBitmapUrls(List<String> urls) {
-        if(urls != null){
+        if (urls != null) {
             mSize = urls.size();
             configWidthAndHeightCircleImage();
         }
     }
 
     public void setBitmapUrls(String... urls) {
-        if(urls != null){
+        if (urls != null) {
             mSize = urls.length;
             configWidthAndHeightCircleImage();
         }
@@ -333,18 +347,18 @@ public class ChatView extends View {
         mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitmapPaints[0].setAlpha(0);
 
-        mItemAvatarWidth = mItemAvatarHeight = mResource.getDimension(R.dimen.height_item_2_avatar);
+        mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
 
-        mDrawableBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
+        mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
 
         if (mTotalMemberPaint == null) {
             mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mTotalMemberPaint.setColor(Color.parseColor("#95a5a6"));
+            mTotalMemberPaint.setColor(mTotalMemberColor);
         }
         if (mTotalMemberTextPaint == null) {
             mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-            mTotalMemberTextPaint.setTextSize(50);
-            mTotalMemberTextPaint.setColor(Color.parseColor("#ecf0f1"));
+            mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
+            mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
         }
         mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
         mTotalMemberText = text;
@@ -363,21 +377,21 @@ public class ChatView extends View {
             mItemAvatarWidth = mItemAvatarHeight = mAvatarBoxWidth;
             mAvatarType = AVATAR_ONE_BITMAP;
         } else if (mSize == 2) {
-            mItemAvatarWidth = mItemAvatarHeight = mResource.getDimension(R.dimen.height_item_2_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
             mAvatarType = AVATAR_TWO_BITMAP;
         } else if (mSize == 3) {
-            mItemAvatarWidth = mItemAvatarHeight = mResource.getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
             mAvatarType = AVATAR_THREE_BITMAP;
-            mHeightDraw = mResource.getDimension(R.dimen.height_bound_case_3_avatar);
+            mHeightDraw = getResources().getDimension(R.dimen.height_bound_case_3_avatar);
         } else if (mSize == 4) {
-            mItemAvatarWidth = mItemAvatarHeight = mResource.getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
             mAvatarType = AVATAR_FOUR_BITMAP;
         } else {
-            mItemAvatarWidth = mItemAvatarHeight = mResource.getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
             mAvatarType = AVATAR_THREE_BITMAP_AND_TEXT;
         }
 
-        mDrawableBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
+        mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
 
         if (mSize > 4) {
             if (mTotalMemberPaint == null) {
@@ -386,12 +400,18 @@ public class ChatView extends View {
             }
             if (mTotalMemberTextPaint == null) {
                 mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-                mTotalMemberTextPaint.setTextSize(50);
-                mTotalMemberTextPaint.setColor(Color.parseColor("#ecf0f1"));
+                mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
+                mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
             }
             mTotalMemberText = String.valueOf(mSize);
         }
         invalidate();
+    }
+
+    public void setDrawTypeTotalMember(int type) {
+        if (type != TOTAL_MEMBER_CIRCLE && type != TOTAL_MEMBER_SQUARE)
+            return;
+        mTotalMemberDrawType = type;
     }
 
     @Override
@@ -461,7 +481,7 @@ public class ChatView extends View {
             mRectBoundText = new Rect();
 
         // TODO: 04/07/2016 Draw AvatarBox
-        drawCircleImageBox(canvas);
+        drawAvatarBox(canvas);
 
         float tranX = mAvatarBoxWidth + getPaddingLeft();
         canvas.translate(tranX, 0);
@@ -525,7 +545,7 @@ public class ChatView extends View {
 
     }
 
-    private void drawCircleImageBox(Canvas canvas) {
+    private void drawAvatarBox(Canvas canvas) {
         canvas.translate(getPaddingLeft(), getPaddingTop());
         float radius;
         float tranX;
@@ -536,7 +556,7 @@ public class ChatView extends View {
                 radius = mItemAvatarWidth / 2.0f;
                 if (!mIsDrawBitmap0) {
                     if (mDrawableDefault0 != null) {
-                        mDrawableDefault0.setBounds(mDrawableBound);
+                        mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                         mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                         mDrawableDefault0.draw(canvas);
                     }
@@ -545,8 +565,7 @@ public class ChatView extends View {
                         processAnimationBitmap0(canvas, radius, 0, 0);
                     } else {
                         mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
-                        canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                        //canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]);
+                        canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                     }
                 }
                 // TODO: 06/07/2016 Case 2: 1 bitmap and 1 text
@@ -557,7 +576,7 @@ public class ChatView extends View {
                 if (!mIsDrawBitmap0) {
                     canvas.translate(tranX, 0);
                     if (mDrawableDefault0 != null) {
-                        mDrawableDefault0.setBounds(mDrawableBound);
+                        mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                         mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                         mDrawableDefault0.draw(canvas);
                     }
@@ -567,8 +586,7 @@ public class ChatView extends View {
                     } else {
                         mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                         canvas.translate(tranX, 0);
-                        canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                        //canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top right
+                        canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                     }
                 }
 
@@ -577,7 +595,10 @@ public class ChatView extends View {
                     mRectBoundText = new Rect();
                 mTotalMemberTextPaint.getTextBounds(mTotalMemberText, 0, mTotalMemberText.length(), mRectBoundText);
                 canvas.translate(-tranX, tranY);
-                canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
+                if (mTotalMemberDrawType == TOTAL_MEMBER_CIRCLE)
+                    canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
+                else
+                    canvas.drawRect(mItemAvatarBoxBound, mTotalMemberPaint);
                 canvas.drawText(mTotalMemberText, radius - (widthTextMeasure / 2), radius + mRectBoundText.height() / 2, mTotalMemberTextPaint);
                 canvas.translate(0, -tranY);
             }
@@ -589,7 +610,7 @@ public class ChatView extends View {
             if (!mIsDrawBitmap0) {
                 canvas.translate(tranX, 0);
                 if (mDrawableDefault0 != null) {
-                    mDrawableDefault0.setBounds(mDrawableBound);
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault0.draw(canvas);
                 }
@@ -600,14 +621,13 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
-                    canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top right
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                 }
             }
             if (!mIsDrawBitmap1) {
                 canvas.translate(-tranX, tranY);
                 if (mDrawableDefault1 != null) {
-                    mDrawableDefault1.setBounds(mDrawableBound);
+                    mDrawableDefault1.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault1.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault1.draw(canvas);
                 }
@@ -617,8 +637,7 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
-                    canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //bottom left
+                    canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
                 }
             }
             canvas.translate(0, -tranY);
@@ -631,7 +650,7 @@ public class ChatView extends View {
             if (!mIsDrawBitmap0) {
                 canvas.translate(tranX, tranY);
                 if (mDrawableDefault0 != null) {
-                    mDrawableDefault0.setBounds(mDrawableBound);
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault0.draw(canvas);
                 }
@@ -641,15 +660,14 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, tranY);
-                    canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                 }
             }
 
             if (!mIsDrawBitmap1) {
                 canvas.translate(-tranX, mItemAvatarHeight - tranY);
                 if (mDrawableDefault1 != null) {
-                    mDrawableDefault1.setBounds(mDrawableBound);
+                    mDrawableDefault1.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault1.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault1.draw(canvas);
                 }
@@ -659,15 +677,14 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, mItemAvatarHeight - tranY);
-                    canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //left
+                    canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
                 }
             }
 
             if (!mIsDrawBitmap2) {
                 canvas.translate(mAvatarBoxWidth - mItemAvatarWidth, 0);
                 if (mDrawableDefault2 != null) {
-                    mDrawableDefault2.setBounds(mDrawableBound);
+                    mDrawableDefault2.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault2.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault2.draw(canvas);
                 }
@@ -677,8 +694,7 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(mAvatarBoxWidth - mItemAvatarWidth, 0);
-                    canvas.drawBitmap(mBitmaps[2], null, mDrawableBound, mBitmapPaints[2]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[2]); //right
+                    canvas.drawBitmap(mBitmaps[2], null, mItemAvatarBoxBound, mBitmapPaints[2]);
                 }
             }
             canvas.translate(-(mAvatarBoxWidth - mItemAvatarWidth), -(mItemAvatarHeight - tranY) - ((mAvatarBoxHeight - mHeightDraw) / 2.0f));
@@ -690,7 +706,7 @@ public class ChatView extends View {
 
             if (!mIsDrawBitmap0) {
                 if (mDrawableDefault0 != null) {
-                    mDrawableDefault0.setBounds(mDrawableBound);
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault0.draw(canvas);
                 }
@@ -699,14 +715,13 @@ public class ChatView extends View {
                     processAnimationBitmap0(canvas, radius, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
-                    canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top left
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                 }
             }
             if (!mIsDrawBitmap1) {
                 canvas.translate(tranX, 0);
                 if (mDrawableDefault1 != null) {
-                    mDrawableDefault1.setBounds(mDrawableBound);
+                    mDrawableDefault1.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault1.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault1.draw(canvas);
                 }
@@ -716,15 +731,14 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
-                    canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //top right
+                    canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
                 }
             }
 
             if (!mIsDrawBitmap2) {
                 canvas.translate(-tranX, tranY);
                 if (mDrawableDefault2 != null) {
-                    mDrawableDefault2.setBounds(mDrawableBound);
+                    mDrawableDefault2.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault2.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault2.draw(canvas);
                 }
@@ -734,14 +748,13 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
-                    canvas.drawBitmap(mBitmaps[2], null, mDrawableBound, mBitmapPaints[2]);
-                    //canvas.drawCircle(radius, radius, radius, mBitmapPaints[2]); //left bottom
+                    canvas.drawBitmap(mBitmaps[2], null, mItemAvatarBoxBound, mBitmapPaints[2]);
                 }
             }
             if (!mIsDrawBitmap3) {
                 canvas.translate(tranX, 0);
                 if (mDrawableDefault3 != null) {
-                    mDrawableDefault3.setBounds(mDrawableBound);
+                    mDrawableDefault3.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault3.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault3.draw(canvas);
                 }
@@ -751,8 +764,7 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[3].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
-                    canvas.drawBitmap(mBitmaps[3], null, mDrawableBound, mBitmapPaints[3]);
-                    // canvas.drawCircle(radius, radius, radius, mBitmapPaints[3]); //right bottom
+                    canvas.drawBitmap(mBitmaps[3], null, mItemAvatarBoxBound, mBitmapPaints[3]);
                 }
             }
             canvas.translate(-tranX, -tranY);
@@ -764,7 +776,7 @@ public class ChatView extends View {
 
             if (!mIsDrawBitmap0) {
                 if (mDrawableDefault0 != null) {
-                    mDrawableDefault0.setBounds(mDrawableBound);
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault0.draw(canvas);
                 }
@@ -773,14 +785,13 @@ public class ChatView extends View {
                     processAnimationBitmap0(canvas, radius, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
-                    canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-                    // canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top left
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                 }
             }
             if (!mIsDrawBitmap1) {
                 canvas.translate(tranX, 0);
                 if (mDrawableDefault1 != null) {
-                    mDrawableDefault1.setBounds(mDrawableBound);
+                    mDrawableDefault1.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault1.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault1.draw(canvas);
                 }
@@ -790,14 +801,13 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
-                    canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-                    // canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //top right
+                    canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
                 }
             }
             if (!mIsDrawBitmap2) {
                 canvas.translate(-tranX, tranY);
                 if (mDrawableDefault2 != null) {
-                    mDrawableDefault2.setBounds(mDrawableBound);
+                    mDrawableDefault2.setBounds(mItemAvatarBoxBound);
                     mDrawableDefault2.setAlpha(ALPHA_DEFAULT);
                     mDrawableDefault2.draw(canvas);
                 }
@@ -807,8 +817,7 @@ public class ChatView extends View {
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
-                    canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-                    // canvas.drawCircle(radius, radius, radius, mBitmapPaints[2]); //left bottom
+                    canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
                 }
             }
 
@@ -819,7 +828,10 @@ public class ChatView extends View {
                     mRectBoundText = new Rect();
                 mTotalMemberTextPaint.getTextBounds(mTotalMemberText, 0, mTotalMemberText.length(), mRectBoundText);
                 canvas.translate(tranX, 0);
-                canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
+                if (mTotalMemberDrawType == TOTAL_MEMBER_CIRCLE)
+                    canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
+                else
+                    canvas.drawRect(mItemAvatarBoxBound, mTotalMemberPaint);
                 canvas.drawText(mTotalMemberText, radius - (widthTextMeasure / 2), radius + mRectBoundText.height() / 2, mTotalMemberTextPaint);
             }
             canvas.translate(-tranX, -tranY);
@@ -862,7 +874,7 @@ public class ChatView extends View {
             mCurrentDrawable0 = 0;
 
         if (mDrawableDefault0 != null) {
-            mDrawableDefault0.setBounds(mDrawableBound);
+            mDrawableDefault0.setBounds(mItemAvatarBoxBound);
             mDrawableDefault0.setAlpha(mCurrentDrawable0);
             mDrawableDefault0.draw(canvas);
         }
@@ -872,8 +884,7 @@ public class ChatView extends View {
             mIsAnimation0 = false;
         }
         mBitmapPaints[0].setAlpha(mCurrentBitmapAlpha0);
-        canvas.drawBitmap(mBitmaps[0], null, mDrawableBound, mBitmapPaints[0]);
-        // canvas.drawCircle(radius, radius, radius, mBitmapPaints[0]); //top right
+        canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
         if (mCurrentBitmapAlpha0 < 255) {
             mCurrentBitmapAlpha0 += ALPHA_STEP;
             mCurrentDrawable0 -= ALPHA_STEP;
@@ -893,7 +904,7 @@ public class ChatView extends View {
             mCurrentDrawable1 = 0;
 
         if (mDrawableDefault1 != null) {
-            mDrawableDefault1.setBounds(mDrawableBound);
+            mDrawableDefault1.setBounds(mItemAvatarBoxBound);
             mDrawableDefault1.setAlpha(mCurrentDrawable1);
             mDrawableDefault1.draw(canvas);
         }
@@ -903,8 +914,7 @@ public class ChatView extends View {
         }
 
         mBitmapPaints[1].setAlpha(mCurrentBitmapAlpha1);
-        canvas.drawBitmap(mBitmaps[1], null, mDrawableBound, mBitmapPaints[1]);
-        // canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //bottom left
+        canvas.drawBitmap(mBitmaps[1], null, mItemAvatarBoxBound, mBitmapPaints[1]);
         if (mCurrentBitmapAlpha1 < 255) {
             mCurrentBitmapAlpha1 += ALPHA_STEP;
             mCurrentDrawable1 -= ALPHA_STEP;
@@ -922,7 +932,7 @@ public class ChatView extends View {
             mCurrentDrawable2 = 0;
 
         if (mDrawableDefault2 != null) {
-            mDrawableDefault2.setBounds(mDrawableBound);
+            mDrawableDefault2.setBounds(mItemAvatarBoxBound);
             mDrawableDefault2.setAlpha(mCurrentDrawable2);
             mDrawableDefault2.draw(canvas);
         }
@@ -933,8 +943,7 @@ public class ChatView extends View {
         }
 
         mBitmapPaints[2].setAlpha(mCurrentBitmapAlpha2);
-        canvas.drawBitmap(mBitmaps[2], null, mDrawableBound, mBitmapPaints[2]);
-        //canvas.drawCircle(radius, radius, radius, mBitmapPaints[2]); //right
+        canvas.drawBitmap(mBitmaps[2], null, mItemAvatarBoxBound, mBitmapPaints[2]);
         if (mCurrentBitmapAlpha2 < 255) {
             mCurrentBitmapAlpha2 += ALPHA_STEP;
             mCurrentDrawable2 -= ALPHA_STEP;
@@ -947,7 +956,7 @@ public class ChatView extends View {
                 mCurrentDrawable3 = 0;
             canvas.translate(tranX, 0);
             if (mDrawableDefault3 != null) {
-                mDrawableDefault3.setBounds(mDrawableBound);
+                mDrawableDefault3.setBounds(mItemAvatarBoxBound);
                 mDrawableDefault3.setAlpha(mCurrentDrawable3);
                 mDrawableDefault3.draw(canvas);
             }
@@ -958,8 +967,7 @@ public class ChatView extends View {
             }
 
             mBitmapPaints[3].setAlpha(mCurrentBitmapAlpha3);
-            canvas.drawBitmap(mBitmaps[3], null, mDrawableBound, mBitmapPaints[3]);
-            // canvas.drawCircle(radius, radius, radius, mBitmapPaints[3]); //left bottom
+            canvas.drawBitmap(mBitmaps[3], null, mItemAvatarBoxBound, mBitmapPaints[3]);
             if (mCurrentBitmapAlpha3 < 255) {
                 mCurrentBitmapAlpha3 += ALPHA_STEP;
                 mCurrentDrawable3 -= ALPHA_STEP;
