@@ -195,8 +195,10 @@ public class ChatView extends View {
     }
 
     public void setDefaultDrawable(Drawable drawableDefault) {
-        mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
-        invalidate();
+        if(drawableDefault != null) {
+            mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
+            invalidate();
+        }
     }
 
     public void setUnreadText(String text) {
@@ -233,8 +235,11 @@ public class ChatView extends View {
             mTitlePaint.setTextSize(mTitleTextSize);
             mTitlePaint.setColor(mTitleTextColor);
         }
-        mTitleText = text;
-        invalidate();
+
+        if(text != null){
+            mTitleText = text;
+            invalidate();
+        }
     }
 
     public void setContent(String text) {
@@ -243,8 +248,11 @@ public class ChatView extends View {
             mContentPaint.setTextSize(mContentTextSize);
             mContentPaint.setColor(mContentTextColor);
         }
-        mContentText = text;
-        invalidate();
+
+        if(text != null){
+            mContentText = text;
+            invalidate();
+        }
     }
 
     public void setStatus(String text) {
@@ -253,8 +261,11 @@ public class ChatView extends View {
             mStatusPaint.setTextSize(mStatusTextSize);
             mStatusPaint.setColor(mStatusTextColor);
         }
-        mStatusText = text;
-        invalidate();
+
+        if(text != null){
+            mStatusText = text;
+            invalidate();
+        }
     }
 
     public void setTitleTextBold(boolean flag) {
@@ -286,9 +297,11 @@ public class ChatView extends View {
     }
 
     public void setIconFailDrawable(Drawable drawable) {
-        mIconFailDrawable = drawable;
-        mIsDrawIconFailDrawable = true;
-        invalidate();
+        if(drawable != null){
+            mIconFailDrawable = drawable;
+            mIsDrawIconFailDrawable = true;
+            invalidate();
+        }
     }
 
     public void setIconNotifyDrawable(Drawable drawable) {
@@ -447,7 +460,7 @@ public class ChatView extends View {
         if (mRectBoundText == null)
             mRectBoundText = new Rect();
 
-        // TODO: 04/07/2016 Draw CircleImageBox
+        // TODO: 04/07/2016 Draw AvatarBox
         drawCircleImageBox(canvas);
 
         float tranX = mAvatarBoxWidth + getPaddingLeft();
@@ -781,8 +794,6 @@ public class ChatView extends View {
                     // canvas.drawCircle(radius, radius, radius, mBitmapPaints[1]); //top right
                 }
             }
-
-
             if (!mIsDrawBitmap2) {
                 canvas.translate(-tranX, tranY);
                 if (mDrawableDefault2 != null) {
