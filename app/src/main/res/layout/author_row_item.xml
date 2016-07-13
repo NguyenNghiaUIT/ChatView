@@ -24,12 +24,15 @@
         app:unread_min_width="@dimen/chatview_unread_min_width"
         app:unread_padding="@dimen/padding_unread_size"
         app:icon_fail_width="@dimen/chatview_icon_fail_width"
-        app:icon_fail_height="@dimen/chatview_icon_fail_hight"
+        app:icon_fail_height="@dimen/chatview_icon_fail_height"
         app:icon_notify_width="@dimen/chatview_icon_notify_width"
         app:icon_notify_height="@dimen/chatview_icon_notify_height"
         app:total_member_text_size="@dimen/total_member_font_size"
         app:unread_text_size="@dimen/text_unread_font_size"
-        app:total_member_text_color="@color/colorAccent"/>
+        app:total_member_text_color="@android:color/white"
+        app:total_member_color="#95a5a6"/>
+
+
 
 
 
