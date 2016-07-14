@@ -142,7 +142,6 @@ public class ChatView extends View {
 
     private int mAvatarType;
 
-
     public ChatView(Context context) {
         this(context, null);
     }
@@ -281,10 +280,13 @@ public class ChatView extends View {
         mTitleText = mContentText = mStatusText = null;
         mTotalMemberText = null;
 
-        int size = mBitmaps.length;
-        for (int i = 0; i < size; i++) {
-            mBitmaps[i] = null;
+        if(mBitmaps != null){
+            int size = mBitmaps.length;
+            for (int i = 0; i < size; i++) {
+                mBitmaps[i] = null;
+            }
         }
+
     }
 
     public void setTitle(String text) {
@@ -388,6 +390,7 @@ public class ChatView extends View {
     public void setBitmapUrl(String url, String text) {
         if (url != null) {
             mSize = 1;
+            mBitmaps = new Bitmap[1];
             mBitmapPaints = new Paint[1];
             mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
             mBitmapPaints[0].setAlpha(0);
@@ -404,7 +407,6 @@ public class ChatView extends View {
                 mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
                 mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
             }
-
             mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
             if (text != null && !text.equals(""))
                 mTotalMemberText = text;
@@ -601,6 +603,7 @@ public class ChatView extends View {
                 radius = mItemAvatarWidth / 2.0f;
                 tranX = mAvatarBoxWidth - mItemAvatarWidth;
                 tranY = mAvatarBoxHeight - mItemAvatarHeight;
+
                 if (!mIsDrawBitmap0) {
                     canvas.translate(tranX, 0);
                     if (mDrawableDefault0 != null) {
@@ -609,6 +612,7 @@ public class ChatView extends View {
                         mDrawableDefault0.draw(canvas);
                     }
                 } else {
+                    Log.e(TAG, "Draw 1 bitmap and 1 text" );
                     if (mIsAnimation0) {
                         processAnimationBitmap0(canvas, tranX, tranY);
                     } else {
