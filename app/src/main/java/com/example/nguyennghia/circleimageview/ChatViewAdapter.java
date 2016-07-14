@@ -51,7 +51,7 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         Log.i(TAG, "getView: " + position);
         final ViewHolder viewHolder;
-          ChatInfo chatInfo = mChatInfos.get(position);
+        ChatInfo chatInfo = mChatInfos.get(position);
         final Picture picture = chatInfo.getPictures();
 
         if (convertView == null) {
@@ -64,7 +64,6 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.ciAvaAuthor.reset();
         }
-
         viewHolder.ciAvaAuthor.setBitmapUrls(picture.getUrls());
         viewHolder.ciAvaAuthor.setUnreadText("N");
         viewHolder.ciAvaAuthor.setStatusTextBold(false);
@@ -77,46 +76,32 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
         viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
         viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
-        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(ChatView.TOTAL_MEMBER_CIRCLE);
+        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(ChatView.TOTAL_MEMBER_SQUARE);
 
         int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
         for (int i = 0; i < size; i++) {
             if (!picture.getLoadeds()[i]) {
-                picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i)), i);
+                Log.i(TAG, "getView: " + "load new");
+                Bitmap bitmap = ZaloAvatarManager.getBitmap(picture.getUrls().get(i));
+                if (bitmap == null)
+                    picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), false), i);
+                else {
+                    if (bitmap.isRecycled())
+                        picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), true), i);
+                    else
+                        picture.setBitmap(bitmap, i);
+                }
                 picture.getLoadeds()[i] = true;
             }
 
-            if(!picture.getBitmaps()[i].isRecycled()){
-                if (picture.getIsAnimation()[i]) {
-                    viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
-                    picture.getIsAnimation()[i] = false;
-                }else{
-                    viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
-                }
-            }else{
-                Log.e(TAG, "Default"  );
+            Log.i(TAG, "getView: " + "load new");
+            if (picture.getIsAnimation()[i]) {
+                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
+                picture.getIsAnimation()[i] = false;
+            } else {
+                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
             }
-
         }
-
-//        for (int i = 0; i < size; i++) {
-//            if (picture.getLoadeds()[i]) {
-//                viewHolder.ciAvaAuthor.drawBitmapAt(picture.getBitmaps()[i], i, false);
-//                picture.getIsAnimation()[i] = false;
-//            } else {
-//                new DownloadAvatarBoxTask().execute(picture);
-//            }
-//        }
-
-//        picture.setOnDownloadBitmapListener(new Picture.OnDownloadBitmap() {
-//            @Override
-//            public void onSuscess(Bitmap bitmap, int index, int type) {
-//                if (viewHolder.ciAvaAuthor.getImageType() == type && picture.getLoadeds()[index]) {
-//                    viewHolder.ciAvaAuthor.drawBitmapAt(bitmap, index, true);
-//                    picture.getIsAnimation()[index] = false;
-//                }
-//            }
-//        });
 
         return convertView;
     }

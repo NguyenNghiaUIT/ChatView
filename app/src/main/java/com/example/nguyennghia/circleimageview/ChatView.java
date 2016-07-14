@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -463,9 +464,9 @@ public class ChatView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = Math.max((int) mAvatarBoxWidth, MeasureSpec.getSize(widthMeasureSpec));
-        int height = Math.max((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), MeasureSpec.getSize(heightMeasureSpec));
-        setMeasuredDimension(width, height);
+        int widthView = View.resolveSize((int) mAvatarBoxWidth, widthMeasureSpec);
+        int heightView = View.resolveSize((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec);
+        setMeasuredDimension(widthView, heightView);
     }
 
     public void setBitmapAt(Bitmap bitmap, int index, boolean animation) {
@@ -581,7 +582,6 @@ public class ChatView extends View {
         if (mSize == 1) {
             // TODO: 06/07/2016 Case1: 1 Bitmap
             if (mTotalMemberText == null) {
-                radius = mItemAvatarWidth / 2.0f;
                 if (!mIsDrawBitmap0) {
                     if (mDrawableDefault0 != null) {
                         mDrawableDefault0.setBounds(mItemAvatarBoxBound);
@@ -590,7 +590,7 @@ public class ChatView extends View {
                     }
                 } else {
                     if (mIsAnimation0) {
-                        processAnimationBitmap0(canvas, radius, 0, 0);
+                        processAnimationBitmap0(canvas, 0, 0);
                     } else {
                         mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                         canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
@@ -610,7 +610,7 @@ public class ChatView extends View {
                     }
                 } else {
                     if (mIsAnimation0) {
-                        processAnimationBitmap0(canvas, radius, tranX, tranY);
+                        processAnimationBitmap0(canvas, tranX, tranY);
                     } else {
                         mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                         canvas.translate(tranX, 0);
@@ -632,7 +632,6 @@ public class ChatView extends View {
             }
             // TODO: 06/07/2016 Case 3: 2 bitmap
         } else if (mSize == 2) {
-            radius = mItemAvatarWidth / 2.0f;
             tranX = mAvatarBoxWidth - mItemAvatarWidth;
             tranY = mAvatarBoxHeight - mItemAvatarHeight;
             if (!mIsDrawBitmap0) {
@@ -645,7 +644,7 @@ public class ChatView extends View {
             } else {
                 if (mIsAnimation0) {
 
-                    processAnimationBitmap0(canvas, radius, tranX, tranY);
+                    processAnimationBitmap0(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
@@ -661,7 +660,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation1) {
-                    processAnimationBitmap1(canvas, radius, tranX, tranY);
+                    processAnimationBitmap1(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
@@ -684,7 +683,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation0) {
-                    processAnimationBitmap0(canvas, radius, tranX, tranY);
+                    processAnimationBitmap0(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, tranY);
@@ -701,7 +700,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation1) {
-                    processAnimationBitmap1(canvas, radius, tranX, tranY);
+                    processAnimationBitmap1(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, mItemAvatarHeight - tranY);
@@ -718,7 +717,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation2) {
-                    processAnimationBitmap2(canvas, radius, tranX, tranY);
+                    processAnimationBitmap2(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(mAvatarBoxWidth - mItemAvatarWidth, 0);
@@ -728,7 +727,6 @@ public class ChatView extends View {
             canvas.translate(-(mAvatarBoxWidth - mItemAvatarWidth), -(mItemAvatarHeight - tranY) - ((mAvatarBoxHeight - mHeightDraw) / 2.0f));
             // TODO: 06/07/2016 case 5: Draw 4 bitmap
         } else if (mSize == 4) {
-            radius = mItemAvatarWidth / 2.0f;
             tranX = mAvatarBoxWidth - mItemAvatarWidth;
             tranY = mAvatarBoxHeight - mItemAvatarHeight;
 
@@ -740,7 +738,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation0) {
-                    processAnimationBitmap0(canvas, radius, tranX, tranY);
+                    processAnimationBitmap0(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
@@ -755,7 +753,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation1) {
-                    processAnimationBitmap1(canvas, radius, tranX, tranY);
+                    processAnimationBitmap1(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
@@ -772,7 +770,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation2) {
-                    processAnimationBitmap2(canvas, radius, tranX, tranY);
+                    processAnimationBitmap2(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
@@ -788,7 +786,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation3) {
-                    processAnimationBitmap3(canvas, radius, tranX, tranY);
+                    processAnimationBitmap3(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[3].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
@@ -810,7 +808,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation0) {
-                    processAnimationBitmap0(canvas, radius, tranX, tranY);
+                    processAnimationBitmap0(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
                     canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
@@ -825,7 +823,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation1) {
-                    processAnimationBitmap1(canvas, radius, tranX, tranY);
+                    processAnimationBitmap1(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[1].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(tranX, 0);
@@ -841,7 +839,7 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation2) {
-                    processAnimationBitmap2(canvas, radius, tranX, tranY);
+                    processAnimationBitmap2(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[2].setAlpha(ALPHA_DEFAULT);
                     canvas.translate(-tranX, tranY);
@@ -887,7 +885,7 @@ public class ChatView extends View {
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
 
-    private void processAnimationBitmap0(Canvas canvas, float radius, float tranX, float tranY) {
+    private void processAnimationBitmap0(Canvas canvas, float tranX, float tranY) {
         if (mSize == 1) {
             if (mTotalMemberText != null) {
                 canvas.translate(tranX, 0);
@@ -917,7 +915,7 @@ public class ChatView extends View {
         }
     }
 
-    private void processAnimationBitmap1(Canvas canvas, float radius, float tranX, float tranY) {
+    private void processAnimationBitmap1(Canvas canvas, float tranX, float tranY) {
         if (mSize == 2) {
             canvas.translate(-tranX, tranY);
         } else if (mSize == 3) {
@@ -947,7 +945,7 @@ public class ChatView extends View {
         }
     }
 
-    private void processAnimationBitmap2(Canvas canvas, float radius, float tranX, float tranY) {
+    private void processAnimationBitmap2(Canvas canvas, float tranX, float tranY) {
         if (mSize == 3) {
             canvas.translate(mAvatarBoxWidth - mItemAvatarWidth, 0);
         } else if (mSize == 4 || mSize > 4) {
@@ -976,7 +974,7 @@ public class ChatView extends View {
         }
     }
 
-    private void processAnimationBitmap3(Canvas canvas, float radius, float tranX, float tranY) {
+    private void processAnimationBitmap3(Canvas canvas, float tranX, float tranY) {
         if (mSize == 4) {
             if (mCurrentDrawable3 < 0)
                 mCurrentDrawable3 = 0;
@@ -999,5 +997,20 @@ public class ChatView extends View {
                 mCurrentDrawable3 -= ALPHA_STEP;
             }
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mBitmaps != null) {
+            int size = mBitmaps.length;
+            for (int i = 0; i < size; i++) {
+                if (mBitmaps[i] != null && !mBitmaps[i].isRecycled()) {
+                    Log.e(TAG, "onDetachedFromWindow: Recycled Bitmap" );
+                    mBitmaps[i].recycle();
+                }
+            }
+        }
+        reset();
     }
 }

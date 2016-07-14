@@ -37,7 +37,7 @@ public class CustomView extends View {
         super(context, attrs, defStyleAttr);
 
        mPaint = new TextPaint();
-        mPaint.setTextSize(context.getResources().getDimension(R.dimen.font_demo));
+        mPaint.setTextSize(context.getResources().getDimension(R.dimen.status_font_size));
         mPaint.setColor(Color.BLACK);
         mPaint.setTypeface(Typeface.create(mPaint.getTypeface(), Typeface.BOLD_ITALIC));
         mPaint.setAntiAlias(true);
