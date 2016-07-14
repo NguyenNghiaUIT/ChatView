@@ -34,18 +34,18 @@ public class ListViewCircleImageTestActivity extends AppCompatActivity {
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 Picture p = new Picture();
-//                int value = mRandom.nextInt(5);
-//                if (value == 0) {
-                p.setUrl(files[i].getAbsolutePath());
-//                } else if (value == 1) {
-//                    p.setUrl(files[1].getAbsolutePath(), files[2].getAbsolutePath());
-//                } else if (value == 2) {
-//                    p.setUrl(files[3].getAbsolutePath(), files[4].getAbsolutePath(), files[5].getAbsolutePath());
-//                } else if (value == 3) {
-//                    p.setUrl(files[6].getAbsolutePath(), files[7].getAbsolutePath(), files[8].getAbsolutePath(), files[9].getAbsolutePath());
-//                } else {
-//                    p.setUrl(files[10].getAbsolutePath(), files[11].getAbsolutePath(), files[12].getAbsolutePath(), files[13].getAbsolutePath(), files[14].getAbsolutePath());
-//                }
+                int value = mRandom.nextInt(5);
+                if (value == 0) {
+                    p.setUrl(files[0].getAbsolutePath());
+                } else if (value == 1) {
+                    p.setUrl(files[1].getAbsolutePath(), files[2].getAbsolutePath());
+                } else if (value == 2) {
+                    p.setUrl(files[3].getAbsolutePath(), files[4].getAbsolutePath(), files[5].getAbsolutePath());
+                } else if (value == 3) {
+                    p.setUrl(files[6].getAbsolutePath(), files[7].getAbsolutePath(), files[8].getAbsolutePath(), files[9].getAbsolutePath());
+                } else {
+                    p.setUrl(files[10].getAbsolutePath(), files[11].getAbsolutePath(), files[12].getAbsolutePath(), files[13].getAbsolutePath(), files[14].getAbsolutePath());
+                }
                 mChatInfos.add(new ChatInfo(files[i].getName(), files[i].length() + "", i + " minutes", p));
             }
             mAdapter = new ChatViewAdapter(this, mChatInfos);
