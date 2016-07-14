@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -242,7 +241,6 @@ public class ChatView extends View {
 
     }
 
-
     public void setDefaultDrawable(Drawable drawableDefault) {
         if (drawableDefault != null && drawableDefault != mDrawableDefault0) {
             mDrawableDefault0 = drawableDefault;
@@ -265,7 +263,7 @@ public class ChatView extends View {
             mUnReadPaintText.setColor(Color.WHITE);
             mUnReadPaintText.setTypeface(Typeface.create(mUnReadPaintText.getTypeface(), Typeface.BOLD));
         }
-        if (text != null) {
+        if (text != null && !text.equals("")) {
             mUnReadText = text;
             mIsDrawUnRead = true;
             invalidate();
@@ -295,7 +293,7 @@ public class ChatView extends View {
             mTitlePaint.setColor(mTitleTextColor);
         }
 
-        if (text != null) {
+        if (text != null && !text.equals("")) {
             mTitleText = text;
             invalidate();
         }
@@ -308,7 +306,7 @@ public class ChatView extends View {
             mContentPaint.setColor(mContentTextColor);
         }
 
-        if (text != null) {
+        if (text != null && !text.equals("")) {
             mContentText = text;
             invalidate();
         }
@@ -321,7 +319,7 @@ public class ChatView extends View {
             mStatusPaint.setColor(mStatusTextColor);
         }
 
-        if (text != null) {
+        if (text != null && !text.equals("")) {
             mStatusText = text;
             invalidate();
         }
@@ -372,14 +370,14 @@ public class ChatView extends View {
     }
 
     public void setBitmapUrls(List<String> urls) {
-        if (urls != null) {
+        if (urls != null && urls.size() > 0) {
             mSize = urls.size();
             configWidthAndHeightCircleImage();
         }
     }
 
     public void setBitmapUrls(String... urls) {
-        if (urls != null) {
+        if (urls != null && urls.length > 0) {
             mSize = urls.length;
             configWidthAndHeightCircleImage();
         }
@@ -387,27 +385,30 @@ public class ChatView extends View {
 
     //Method only using for draw one bitmap and text
     public void setBitmapUrl(String url, String text) {
-        mSize = 1;
-        mBitmapPaints = new Paint[1];
-        mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBitmapPaints[0].setAlpha(0);
+        if (url != null) {
+            mSize = 1;
+            mBitmapPaints = new Paint[1];
+            mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mBitmapPaints[0].setAlpha(0);
 
-        mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
+            mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
 
-        mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
+            if (mTotalMemberPaint == null) {
+                mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mTotalMemberPaint.setColor(mTotalMemberColor);
+            }
+            if (mTotalMemberTextPaint == null) {
+                mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+                mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
+                mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
+            }
 
-        if (mTotalMemberPaint == null) {
-            mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mTotalMemberPaint.setColor(mTotalMemberColor);
+            mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
+            if (text != null && !text.equals(""))
+                mTotalMemberText = text;
         }
-        if (mTotalMemberTextPaint == null) {
-            mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-            mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
-            mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
-        }
 
-        mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
-        mTotalMemberText = text;
     }
 
     private void configWidthAndHeightCircleImage() {
@@ -499,9 +500,13 @@ public class ChatView extends View {
         return mAvatarType;
     }
 
+    public Bitmap[] getBitmapsData() {
+        return mBitmaps;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d(TAG, "onDraw");
+        //Log.d(TAG, "onDraw");
         if (mRectBoundText == null)
             mRectBoundText = new Rect();
 
@@ -514,7 +519,7 @@ public class ChatView extends View {
 
         // TODO: 29/06/2016 Draw Status
         if (mStatusText != null) {
-            Log.d(TAG, "onDraw: Draw Status");
+            //Log.d(TAG, "onDraw: Draw Status");
             float measureStatusWidth = mStatusPaint.measureText(mStatusText);
             mStatusPaint.getTextBounds(mStatusText, 0, mStatusText.length(), mRectBoundText);
             canvas.drawText(mStatusText, availableWidth - measureStatusWidth, getPaddingTop() + mRectBoundText.height() + mStatusMarginTop, mStatusPaint);
@@ -532,7 +537,7 @@ public class ChatView extends View {
         CharSequence str;
         // TODO: 29/06/2016 Draw Title
         if (mTitleText != null) {
-            Log.i(TAG, "onDraw: Draw Title");
+            // Log.i(TAG, "onDraw: Draw Title");
             mIsDrawDivider = true;
             str = TextUtils.ellipsize(mTitleText, mTitlePaint, availableWidth - mTitleMarginLeft, TextUtils.TruncateAt.END);
             mTitlePaint.getTextBounds(mTitleText, 0, mTitleText.length(), mRectBoundText);
@@ -540,7 +545,7 @@ public class ChatView extends View {
         }
         // TODO: 29/06/2016 Draw Content
         if (mContentText != null) {
-            Log.d(TAG, "onDraw: Draw Content");
+            //Log.d(TAG, "onDraw: Draw Content");
             str = TextUtils.ellipsize(mContentText, mContentPaint, availableWidth - mContentMarginLeft, TextUtils.TruncateAt.END);
             canvas.drawText(str, 0, str.length(), mContentMarginLeft, getHeight() - mContentPaint.descent() - getPaddingBottom() - mContentMarginBottom, mContentPaint);
         }
@@ -557,7 +562,7 @@ public class ChatView extends View {
 
         // TODO: 06/07/2016 Draw Notify Icon
         if (mIsDrawIconNotifyDrawable && mIconNotifyDrawable != null) {
-            Log.d(TAG, "onDraw: Draw Notify");
+            //Log.d(TAG, "onDraw: Draw Notify");
             int top = (getHeight() - mIconNotifyDrawableHeight) / 2;
             int left = getWidth() - (int) tranX - getPaddingRight() - mIconNotifyDrawableWidth;
             mIconNotifyDrawable.setBounds(left, top, left + mIconNotifyDrawableWidth, top + mIconNotifyDrawableHeight);
@@ -569,13 +574,6 @@ public class ChatView extends View {
     }
 
     private void drawAvatarBox(Canvas canvas) {
-
-        int size = mBitmaps.length;
-        for(int i = 0; i < size; i++){
-            if(mBitmaps[i].isRecycled()){
-                Log.e(TAG, "Recycled");
-            }
-        }
         canvas.translate(getPaddingLeft(), getPaddingTop());
         float radius;
         float tranX;
