@@ -3,36 +3,36 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="height_width_avatar_box">58dp</dimen>
-    <dimen name="height_item_2_avatar">33dp</dimen>
-    <dimen name="height_item_3_avatar">28dp</dimen>
-    <dimen name="height_bound_case_3_avatar">54.11dp</dimen>
+    <dimen name="dialog_item_view_height_width_avatar_box">58dp</dimen>
+    <dimen name="dialog_item_view_height_item_2_avatar">33dp</dimen>
+    <dimen name="dialog_item_view_height_item_3_avatar">28dp</dimen>
+    <dimen name="dialog_item_view_height_bound_case_3_avatar">54.11dp</dimen>
 
-    <dimen name="chatview_unread_min_width">18dp</dimen>
-    <dimen name="chatview_unread_min_height">18dp</dimen>
-    <dimen name="text_unread_font_size">11.0dp</dimen>
-    <dimen name="padding_unread_size">0.5dp</dimen>
-    <dimen name="padding_left_right_chat_view">6dp</dimen>
-    <dimen name="padding_top_bottom_chat_view">3dp</dimen>
-    <dimen name="title_margin_top">3dp</dimen>
-    <dimen name="chat_view_divider_size">1px</dimen>
-    <dimen name="total_member_font_size">15dp</dimen>
+    <dimen name="dialog_item_view_unread_min_width">18dp</dimen>
+    <dimen name="dialog_item_view_unread_min_height">18dp</dimen>
+    <dimen name="dialog_item_view_text_unread_font_size">11.0dp</dimen>
+    <dimen name="dialog_item_view_padding_unread_size">0.5dp</dimen>
+    <dimen name="dialog_item_view_padding_left_right">6dp</dimen>
+    <dimen name="dialog_item_view_padding_top_bottom">3dp</dimen>
+    <dimen name="dialog_item_view_title_margin_top">3dp</dimen>
+    <dimen name="dialog_item_view_divider_size">1px</dimen>
+    <dimen name="dialog_item_view_total_member_font_size">15dp</dimen>
 
-    <dimen name="title_font_size">18dp</dimen>
-    <dimen name="status_font_size">12dp</dimen>
-    <dimen name="content_font_size">14dp</dimen>
+    <dimen name="dialog_item_view_title_font_size">18dp</dimen>
+    <dimen name="dialog_item_view_status_font_size">12dp</dimen>
+    <dimen name="dialog_item_view_content_font_size">14dp</dimen>
 
-    <dimen name="chatview_icon_notify_width">20dp</dimen>
-    <dimen name="chatview_icon_notify_height">20dp</dimen>
+    <dimen name="dialog_item_view_icon_notify_width">20dp</dimen>
+    <dimen name="dialog_item_view_icon_notify_height">20dp</dimen>
 
-    <dimen name="chatview_icon_fail_width">20dp</dimen>
-    <dimen name="chatview_icon_fail_height">20dp</dimen>
+    <dimen name="dialog_item_view_icon_fail_width">20dp</dimen>
+    <dimen name="dialog_item_view_icon_fail_height">20dp</dimen>
 
-    <!--define font size default for chatview-->
-    <dimen name="micro_font_size">12sp</dimen>
-    <dimen name="small_font_size">14sp</dimen>
-    <dimen name="medium_font_size">18sp</dimen>
-    <dimen name="large_font_size">22sp</dimen>
+    <!--define font size default for DialogItemView-->
+    <dimen name="dialog_item_view_micro_font_size">12sp</dimen>
+    <dimen name="dialog_item_view_small_font_size">14sp</dimen>
+    <dimen name="dialog_item_view_medium_font_size">18sp</dimen>
+    <dimen name="dialog_item_view_large_font_size">22sp</dimen>
 
 
 </resources>

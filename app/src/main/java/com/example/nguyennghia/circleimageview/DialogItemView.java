@@ -21,7 +21,7 @@ import java.util.List;
  * Created by nguyennghia on 29/06/2016.
  */
 
-public class ChatView extends View {
+public class DialogItemView extends View {
     private static final String TAG = "ChatView";
 
     private static final short ALPHA_DEFAULT = 255;
@@ -142,15 +142,15 @@ public class ChatView extends View {
 
     private int mAvatarType;
 
-    public ChatView(Context context) {
+    public DialogItemView(Context context) {
         this(context, null);
     }
 
-    public ChatView(Context context, AttributeSet attrs) {
+    public DialogItemView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ChatView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DialogItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChatView, 0, 0);
@@ -202,42 +202,42 @@ public class ChatView extends View {
             if (a != null)
                 a.recycle();
         }
-        mAvatarBoxWidth = mAvatarBoxHeight = getResources().getDimension(R.dimen.height_width_avatar_box);
+        mAvatarBoxWidth = mAvatarBoxHeight = getResources().getDimension(R.dimen.dialog_item_view_height_width_avatar_box);
     }
 
     private void setAttributeValueDefault() {
         mTitleMarginLeft = mTitleMarginTop = mTitleMarginRight = mTitleMarginBottom = 0;
         mTitleTextColor = Color.BLACK;
-        mTitleTextSize = getResources().getDimensionPixelSize(R.dimen.medium_font_size);
+        mTitleTextSize = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_medium_font_size);
 
         mContentMarginLeft = mContentMarginTop = mContentMarginRight = mContentMarginBottom = 0;
         mContentTextColor = Color.BLACK;
-        mContentTextSize = getResources().getDimensionPixelSize(R.dimen.small_font_size);
+        mContentTextSize = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_small_font_size);
 
         mStatusMarginLeft = mStatusMarginTop = mStatusMarginRight = mStatusMarginBottom = 0;
         mStatusTextColor = Color.BLACK;
-        mStatusTextSize = getResources().getDimensionPixelSize(R.dimen.small_font_size);
+        mStatusTextSize = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_small_font_size);
 
         mTotalMemberColor = Color.GRAY;
-        mTotalMemberTextSize = getResources().getDimensionPixelSize(R.dimen.small_font_size);
+        mTotalMemberTextSize = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_small_font_size);
         mTotalMemberTextColor = Color.WHITE;
 
         mDividerColor = Color.BLACK;
-        mDividerHeight = getResources().getDimensionPixelSize(R.dimen.chat_view_divider_size);
+        mDividerHeight = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_divider_size);
         mUnreadColor = Color.RED;
-        mPaddingUnread = getResources().getDimensionPixelSize(R.dimen.padding_unread_size);
+        mPaddingUnread = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_padding_unread_size);
 
         mUnreadTextColor = Color.WHITE;
-        mUnreadTextSize = getResources().getDimensionPixelSize(R.dimen.small_font_size);
+        mUnreadTextSize = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_small_font_size);
 
-        mUnreadMinWidth = getResources().getDimensionPixelSize(R.dimen.chatview_unread_min_width);
-        mUnreadMinHeight = getResources().getDimensionPixelSize(R.dimen.chatview_unread_min_width);
+        mUnreadMinWidth = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_unread_min_width);
+        mUnreadMinHeight = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_unread_min_width);
 
-        mIconFailDrawableWidth = getResources().getDimensionPixelSize(R.dimen.chatview_icon_fail_width);
-        mIconFailDrawableHeight = getResources().getDimensionPixelSize(R.dimen.chatview_icon_fail_height);
+        mIconFailDrawableWidth = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_icon_fail_width);
+        mIconFailDrawableHeight = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_icon_fail_height);
 
-        mIconNotifyDrawableWidth = getResources().getDimensionPixelSize(R.dimen.chatview_icon_notify_width);
-        mIconNotifyDrawableHeight = getResources().getDimensionPixelSize(R.dimen.chatview_icon_notify_height);
+        mIconNotifyDrawableWidth = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_icon_notify_width);
+        mIconNotifyDrawableHeight = getResources().getDimensionPixelSize(R.dimen.dialog_item_view_icon_notify_height);
 
     }
 
@@ -331,10 +331,8 @@ public class ChatView extends View {
     public void setTitleTextBold(boolean flag) {
         if (mTitlePaint != null) {
             if (flag) {
-                Log.e(TAG, "setTitleTextBold: ");
                 mTitlePaint.setTypeface(Typeface.create(mTitlePaint.getTypeface(), Typeface.BOLD));
-            }
-            else
+            } else
                 mTitlePaint.setTypeface(Typeface.create(mTitlePaint.getTypeface(), Typeface.NORMAL));
             invalidate();
         }
@@ -399,7 +397,7 @@ public class ChatView extends View {
             mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
             mBitmapPaints[0].setAlpha(0);
 
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_2_avatar);
             mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
 
             if (mTotalMemberPaint == null) {
@@ -431,17 +429,17 @@ public class ChatView extends View {
             mItemAvatarWidth = mItemAvatarHeight = mAvatarBoxWidth;
             mAvatarType = AVATAR_ONE_BITMAP;
         } else if (mSize == 2) {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_2_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_2_avatar);
             mAvatarType = AVATAR_TWO_BITMAP;
         } else if (mSize == 3) {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
             mAvatarType = AVATAR_THREE_BITMAP;
-            mHeightDraw = getResources().getDimension(R.dimen.height_bound_case_3_avatar);
+            mHeightDraw = getResources().getDimension(R.dimen.dialog_item_view_height_bound_case_3_avatar);
         } else if (mSize == 4) {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
             mAvatarType = AVATAR_FOUR_BITMAP;
         } else {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.height_item_3_avatar);
+            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
             mAvatarType = AVATAR_THREE_BITMAP_AND_TEXT;
         }
 
@@ -515,6 +513,7 @@ public class ChatView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         //Log.d(TAG, "onDraw");
+        long startTime = System.nanoTime();
         if (mRectBoundText == null)
             mRectBoundText = new Rect();
 
@@ -579,6 +578,8 @@ public class ChatView extends View {
         if (mIsAnimation0 || mIsAnimation1 || mIsAnimation2 || mIsAnimation3) {
             postInvalidateDelayed(TIME_REFESH);
         }
+
+        Log.e(TAG, "onDraw: Total Time: " + (System.nanoTime() - startTime));
     }
 
     private void drawAvatarBox(Canvas canvas) {

@@ -3,8 +3,6 @@ package com.example.nguyennghia.circleimageview;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.example.nguyennghia.circleimageview.model.ChatInfo;
@@ -50,13 +48,6 @@ public class ListViewCircleImageTestActivity extends AppCompatActivity {
             }
             mAdapter = new ChatViewAdapter(this, mChatInfos);
             lvAuthor.setAdapter(mAdapter);
-
-            lvAuthor.setRecyclerListener(new AbsListView.RecyclerListener() {
-                @Override
-                public void onMovedToScrapHeap(View view) {
-                    Log.e(TAG, "onMovedToScrapHeap: " + view);
-                }
-            });
 
         }
     }

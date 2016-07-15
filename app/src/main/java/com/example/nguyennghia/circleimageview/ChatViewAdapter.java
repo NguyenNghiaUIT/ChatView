@@ -58,7 +58,7 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             LayoutInflater li = LayoutInflater.from(mContext);
             convertView = li.inflate(R.layout.author_row_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.ciAvaAuthor = (ChatView) convertView.findViewById(R.id.ci_ava_author);
+            viewHolder.ciAvaAuthor = (DialogItemView) convertView.findViewById(R.id.ci_ava_author);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -78,7 +78,7 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
         viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
         viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
-        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(ChatView.TOTAL_MEMBER_SQUARE);
+        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(DialogItemView.TOTAL_MEMBER_SQUARE);
 
         int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
         for (int i = 0; i < size; i++) {
@@ -107,7 +107,7 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
 
 
     static class ViewHolder {
-        private ChatView ciAvaAuthor;
+        private DialogItemView ciAvaAuthor;
     }
 
     class DownloadAvatarBoxTask extends AsyncTask<Picture, Void, Void> {

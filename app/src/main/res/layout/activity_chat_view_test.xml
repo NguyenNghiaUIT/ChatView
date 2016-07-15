@@ -3,10 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.nguyennghia.circleimageview.ChatViewTestActivity">
 
-    <com.example.nguyennghia.circleimageview.ChatView
+    <com.example.nguyennghia.circleimageview.DialogItemView
         android:id="@+id/ci_chat_view"
+        app:unread_min_width="@dimen/dialog_item_view_unread_min_width"
+        app:unread_min_height="@dimen/dialog_item_view_unread_min_height"
+        app:unread_text_size="@dimen/dialog_item_view_text_unread_font_size"
         android:layout_width="match_parent"
+        android:paddingBottom="@dimen/dialog_item_view_padding_top_bottom"
+        android:paddingTop="@dimen/dialog_item_view_padding_top_bottom"
+        android:paddingLeft="@dimen/dialog_item_view_padding_left_right"
         android:layout_height="wrap_content" />
 </FrameLayout>

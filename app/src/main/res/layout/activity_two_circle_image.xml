@@ -12,7 +12,7 @@
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent" />-->
 
-    <com.example.nguyennghia.circleimageview.ChatView
+    <com.example.nguyennghia.circleimageview.DialogItemView
         android:id="@+id/cv_two_image"
         app:content_margin_left="12dp"
         app:content_text_size="10sp"
@@ -23,10 +23,10 @@
         app:title_text_size="12sp"
         app:unread_min_height="18dp"
         app:unread_min_width="18dp"
-        app:unread_padding="@dimen/padding_unread_size"
-        app:unread_text_size="@dimen/text_unread_font_size"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:unread_padding="@dimen/dialog_item_view_padding_unread_size"
+        app:unread_text_size="@dimen/dialog_item_view_text_unread_font_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <!--<com.example.nguyennghia.circleimageview.CustomView-->
