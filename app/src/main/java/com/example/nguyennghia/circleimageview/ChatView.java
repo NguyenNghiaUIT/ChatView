@@ -23,9 +23,6 @@ import java.util.List;
 
 public class ChatView extends View {
     private static final String TAG = "ChatView";
-    private static int sWidthView;
-    private static int sHeightView;
-
 
     private static final short ALPHA_DEFAULT = 255;
     private static final int ANIMATION_DURATION = 300;
@@ -257,13 +254,13 @@ public class ChatView extends View {
     public void setUnreadText(String text) {
         if (mUnReadPaint == null) {
             mUnReadPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mUnReadPaint.setColor(Color.RED);
+            mUnReadPaint.setColor(mUnreadColor);
         }
 
         if (mUnReadPaintText == null) {
             mUnReadPaintText = new TextPaint(Paint.ANTI_ALIAS_FLAG);
             mUnReadPaintText.setTextSize(mUnreadTextSize);
-            mUnReadPaintText.setColor(Color.WHITE);
+            mUnReadPaintText.setColor(mUnreadTextColor);
             mUnReadPaintText.setTypeface(Typeface.create(mUnReadPaintText.getTypeface(), Typeface.BOLD));
         }
         if (!TextUtils.isEmpty(text)) {
@@ -333,10 +330,13 @@ public class ChatView extends View {
 
     public void setTitleTextBold(boolean flag) {
         if (mTitlePaint != null) {
-            if (flag)
+            if (flag) {
+                Log.e(TAG, "setTitleTextBold: ");
                 mTitlePaint.setTypeface(Typeface.create(mTitlePaint.getTypeface(), Typeface.BOLD));
+            }
             else
                 mTitlePaint.setTypeface(Typeface.create(mTitlePaint.getTypeface(), Typeface.NORMAL));
+            invalidate();
         }
     }
 
@@ -346,6 +346,7 @@ public class ChatView extends View {
                 mContentPaint.setTypeface(Typeface.create(mContentPaint.getTypeface(), Typeface.BOLD));
             else
                 mContentPaint.setTypeface(Typeface.create(mContentPaint.getTypeface(), Typeface.NORMAL));
+            invalidate();
         }
     }
 
@@ -355,8 +356,8 @@ public class ChatView extends View {
                 mStatusPaint.setTypeface(Typeface.create(mStatusPaint.getTypeface(), Typeface.BOLD));
             else
                 mStatusPaint.setTypeface(Typeface.create(mStatusPaint.getTypeface(), Typeface.NORMAL));
+            invalidate();
         }
-
     }
 
     public void setIconFailDrawable(Drawable drawable) {
@@ -469,12 +470,10 @@ public class ChatView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (sWidthView == 0 || sHeightView == 0) {
-            Log.e(TAG, "onMeasure: ");
-            sWidthView = View.resolveSize((int) mAvatarBoxWidth, widthMeasureSpec);
-            sHeightView = View.resolveSize((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec);
-        }
-        setMeasuredDimension(sWidthView, sHeightView);
+        Log.e(TAG, "onMeasure: ");
+        int widthView = View.resolveSize((int) mAvatarBoxWidth, widthMeasureSpec);
+        int heightView = View.resolveSize((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec);
+        setMeasuredDimension(widthView, heightView);
     }
 
     public void setBitmapAt(Bitmap bitmap, int index, boolean animation) {
@@ -892,6 +891,7 @@ public class ChatView extends View {
         }
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
+
 
     private void processAnimationBitmap0(Canvas canvas, float tranX, float tranY) {
         if (mSize == 1) {
