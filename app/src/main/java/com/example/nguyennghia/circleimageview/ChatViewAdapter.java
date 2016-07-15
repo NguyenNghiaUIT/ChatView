@@ -64,15 +64,17 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.ciAvaAuthor.reset();
         }
+
         viewHolder.ciAvaAuthor.setBitmapUrls(picture.getUrls());
-        viewHolder.ciAvaAuthor.setUnreadText("N");
-        viewHolder.ciAvaAuthor.setStatusTextBold(false);
-        viewHolder.ciAvaAuthor.setTitleTextBold(false);
-        viewHolder.ciAvaAuthor.setContentTextBold(false);
+        viewHolder.ciAvaAuthor.setUnreadText("2");
 
         viewHolder.ciAvaAuthor.setTitle(chatInfo.getTitle());
         viewHolder.ciAvaAuthor.setContent(chatInfo.getContent());
         viewHolder.ciAvaAuthor.setStatus(chatInfo.getStatus());
+        viewHolder.ciAvaAuthor.setStatusTextBold(false);
+        viewHolder.ciAvaAuthor.setTitleTextBold(true);
+        viewHolder.ciAvaAuthor.setContentTextBold(false);
+
         viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
         viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
         viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
@@ -81,7 +83,6 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
         int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
         for (int i = 0; i < size; i++) {
             if (!picture.getLoadeds()[i]) {
-                Log.i(TAG, "getView: " + "load new");
                 Bitmap bitmap = ZaloAvatarManager.getBitmap(picture.getUrls().get(i));
                 if (bitmap == null)
                     picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), false), i);
@@ -94,7 +95,6 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
                 picture.getLoadeds()[i] = true;
             }
 
-            Log.i(TAG, "getView: " + "load new");
             if (picture.getIsAnimation()[i]) {
                 viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
                 picture.getIsAnimation()[i] = false;
@@ -102,9 +102,9 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
                 viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
             }
         }
-
         return convertView;
     }
+
 
     static class ViewHolder {
         private ChatView ciAvaAuthor;
