@@ -153,47 +153,47 @@ public class DialogItemView extends View {
     public DialogItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChatView, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DialogItemView, 0, 0);
         try {
-            mTitleMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_left, 0);
-            mTitleMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_top, 0);
-            mTitleMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_right, 0);
-            mTitleMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_title_margin_bottom, 0);
-            mTitleTextColor = a.getColor(R.styleable.ChatView_title_color, Color.BLACK);
-            mTitleTextSize = a.getDimensionPixelSize(R.styleable.ChatView_title_text_size, 30);
+            mTitleMarginLeft = a.getDimensionPixelSize(R.styleable.DialogItemView_title_margin_left, 0);
+            mTitleMarginTop = a.getDimensionPixelSize(R.styleable.DialogItemView_title_margin_top, 0);
+            mTitleMarginRight = a.getDimensionPixelSize(R.styleable.DialogItemView_title_margin_right, 0);
+            mTitleMarginBottom = a.getDimensionPixelSize(R.styleable.DialogItemView_title_margin_bottom, 0);
+            mTitleTextColor = a.getColor(R.styleable.DialogItemView_title_color, Color.BLACK);
+            mTitleTextSize = a.getDimensionPixelSize(R.styleable.DialogItemView_title_text_size, 30);
 
-            mContentMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_left, 0);
-            mContentMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_top, 0);
-            mContentMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_right, 0);
-            mContentMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_content_margin_bottom, 0);
-            mContentTextColor = a.getColor(R.styleable.ChatView_content_color, Color.BLACK);
-            mContentTextSize = a.getDimensionPixelSize(R.styleable.ChatView_content_text_size, 30);
+            mContentMarginLeft = a.getDimensionPixelSize(R.styleable.DialogItemView_content_margin_left, 0);
+            mContentMarginTop = a.getDimensionPixelSize(R.styleable.DialogItemView_content_margin_top, 0);
+            mContentMarginRight = a.getDimensionPixelSize(R.styleable.DialogItemView_content_margin_right, 0);
+            mContentMarginBottom = a.getDimensionPixelSize(R.styleable.DialogItemView_content_margin_bottom, 0);
+            mContentTextColor = a.getColor(R.styleable.DialogItemView_content_color, Color.BLACK);
+            mContentTextSize = a.getDimensionPixelSize(R.styleable.DialogItemView_content_text_size, 30);
 
-            mStatusMarginLeft = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_left, 0);
-            mStatusMarginTop = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_top, 0);
-            mStatusMarginRight = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_right, 0);
-            mStatusMarginBottom = a.getDimensionPixelSize(R.styleable.ChatView_status_margin_bottom, 0);
-            mStatusTextColor = a.getColor(R.styleable.ChatView_status_color, Color.BLACK);
-            mStatusTextSize = a.getDimensionPixelSize(R.styleable.ChatView_status_text_size, 30);
+            mStatusMarginLeft = a.getDimensionPixelSize(R.styleable.DialogItemView_status_margin_left, 0);
+            mStatusMarginTop = a.getDimensionPixelSize(R.styleable.DialogItemView_status_margin_top, 0);
+            mStatusMarginRight = a.getDimensionPixelSize(R.styleable.DialogItemView_status_margin_right, 0);
+            mStatusMarginBottom = a.getDimensionPixelSize(R.styleable.DialogItemView_status_margin_bottom, 0);
+            mStatusTextColor = a.getColor(R.styleable.DialogItemView_status_color, Color.BLACK);
+            mStatusTextSize = a.getDimensionPixelSize(R.styleable.DialogItemView_status_text_size, 30);
 
-            mTotalMemberColor = a.getColor(R.styleable.ChatView_total_member_color, Color.GRAY);
-            mTotalMemberTextSize = a.getDimensionPixelSize(R.styleable.ChatView_total_member_text_size, 30);
-            mTotalMemberTextColor = a.getColor(R.styleable.ChatView_total_member_text_color, Color.parseColor("#ecf0f1"));
+            mTotalMemberColor = a.getColor(R.styleable.DialogItemView_total_member_color, Color.GRAY);
+            mTotalMemberTextSize = a.getDimensionPixelSize(R.styleable.DialogItemView_total_member_text_size, 30);
+            mTotalMemberTextColor = a.getColor(R.styleable.DialogItemView_total_member_text_color, Color.parseColor("#ecf0f1"));
 
-            mDividerColor = a.getColor(R.styleable.ChatView_divider_color, Color.GRAY);
-            mDividerHeight = a.getDimensionPixelSize(R.styleable.ChatView_divider_height, 1);
-            mUnreadColor = a.getColor(R.styleable.ChatView_unread_color, Color.RED);
-            mPaddingUnread = a.getDimensionPixelSize(R.styleable.ChatView_unread_padding, 0);
-            mUnreadTextColor = a.getColor(R.styleable.ChatView_unread_text_color, Color.WHITE);
-            mUnreadTextSize = a.getDimensionPixelSize(R.styleable.ChatView_unread_text_size, 10);
-            mUnreadMinWidth = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_width, 0);
-            mUnreadMinHeight = a.getDimensionPixelSize(R.styleable.ChatView_unread_min_height, 0);
+            mDividerColor = a.getColor(R.styleable.DialogItemView_divider_color, Color.GRAY);
+            mDividerHeight = a.getDimensionPixelSize(R.styleable.DialogItemView_divider_height, 1);
+            mUnreadColor = a.getColor(R.styleable.DialogItemView_unread_color, Color.RED);
+            mPaddingUnread = a.getDimensionPixelSize(R.styleable.DialogItemView_unread_padding, 0);
+            mUnreadTextColor = a.getColor(R.styleable.DialogItemView_unread_text_color, Color.WHITE);
+            mUnreadTextSize = a.getDimensionPixelSize(R.styleable.DialogItemView_unread_text_size, 10);
+            mUnreadMinWidth = a.getDimensionPixelSize(R.styleable.DialogItemView_unread_min_width, 0);
+            mUnreadMinHeight = a.getDimensionPixelSize(R.styleable.DialogItemView_unread_min_height, 0);
 
-            mIconFailDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_width, 0);
-            mIconFailDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_fail_height, 0);
+            mIconFailDrawableWidth = a.getDimensionPixelSize(R.styleable.DialogItemView_icon_fail_width, 0);
+            mIconFailDrawableHeight = a.getDimensionPixelSize(R.styleable.DialogItemView_icon_fail_height, 0);
 
-            mIconNotifyDrawableWidth = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_width, 0);
-            mIconNotifyDrawableHeight = a.getDimensionPixelSize(R.styleable.ChatView_icon_notify_height, 0);
+            mIconNotifyDrawableWidth = a.getDimensionPixelSize(R.styleable.DialogItemView_icon_notify_width, 0);
+            mIconNotifyDrawableHeight = a.getDimensionPixelSize(R.styleable.DialogItemView_icon_notify_height, 0);
 
         } catch (UnsupportedOperationException e) {
             e.printStackTrace();
