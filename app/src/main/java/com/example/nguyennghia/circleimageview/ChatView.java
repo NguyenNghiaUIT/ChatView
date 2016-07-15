@@ -23,6 +23,9 @@ import java.util.List;
 
 public class ChatView extends View {
     private static final String TAG = "ChatView";
+    private static int sWidthView;
+    private static int sHeightView;
+
 
     private static final short ALPHA_DEFAULT = 255;
     private static final int ANIMATION_DURATION = 300;
@@ -263,7 +266,7 @@ public class ChatView extends View {
             mUnReadPaintText.setColor(Color.WHITE);
             mUnReadPaintText.setTypeface(Typeface.create(mUnReadPaintText.getTypeface(), Typeface.BOLD));
         }
-        if (text != null && !text.equals("")) {
+        if (!TextUtils.isEmpty(text)) {
             mUnReadText = text;
             mIsDrawUnRead = true;
             invalidate();
@@ -280,7 +283,7 @@ public class ChatView extends View {
         mTitleText = mContentText = mStatusText = null;
         mTotalMemberText = null;
 
-        if(mBitmaps != null){
+        if (mBitmaps != null) {
             int size = mBitmaps.length;
             for (int i = 0; i < size; i++) {
                 mBitmaps[i] = null;
@@ -296,7 +299,7 @@ public class ChatView extends View {
             mTitlePaint.setColor(mTitleTextColor);
         }
 
-        if (text != null && !text.equals("")) {
+        if (!TextUtils.isEmpty(text)) {
             mTitleText = text;
             invalidate();
         }
@@ -309,7 +312,7 @@ public class ChatView extends View {
             mContentPaint.setColor(mContentTextColor);
         }
 
-        if (text != null && !text.equals("")) {
+        if (!TextUtils.isEmpty(text)) {
             mContentText = text;
             invalidate();
         }
@@ -322,7 +325,7 @@ public class ChatView extends View {
             mStatusPaint.setColor(mStatusTextColor);
         }
 
-        if (text != null && !text.equals("")) {
+        if (!TextUtils.isEmpty(text)) {
             mStatusText = text;
             invalidate();
         }
@@ -408,7 +411,7 @@ public class ChatView extends View {
                 mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
             }
             mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
-            if (text != null && !text.equals(""))
+            if (!TextUtils.isEmpty(text))
                 mTotalMemberText = text;
         }
 
@@ -466,9 +469,12 @@ public class ChatView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthView = View.resolveSize((int) mAvatarBoxWidth, widthMeasureSpec);
-        int heightView = View.resolveSize((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec);
-        setMeasuredDimension(widthView, heightView);
+        if (sWidthView == 0 || sHeightView == 0) {
+            Log.e(TAG, "onMeasure: ");
+            sWidthView = View.resolveSize((int) mAvatarBoxWidth, widthMeasureSpec);
+            sHeightView = View.resolveSize((int) mAvatarBoxHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec);
+        }
+        setMeasuredDimension(sWidthView, sHeightView);
     }
 
     public void setBitmapAt(Bitmap bitmap, int index, boolean animation) {
@@ -612,7 +618,6 @@ public class ChatView extends View {
                         mDrawableDefault0.draw(canvas);
                     }
                 } else {
-                    Log.e(TAG, "Draw 1 bitmap and 1 text" );
                     if (mIsAnimation0) {
                         processAnimationBitmap0(canvas, tranX, tranY);
                     } else {
@@ -647,7 +652,6 @@ public class ChatView extends View {
                 }
             } else {
                 if (mIsAnimation0) {
-
                     processAnimationBitmap0(canvas, tranX, tranY);
                 } else {
                     mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
@@ -1010,7 +1014,7 @@ public class ChatView extends View {
             int size = mBitmaps.length;
             for (int i = 0; i < size; i++) {
                 if (mBitmaps[i] != null && !mBitmaps[i].isRecycled()) {
-                    Log.e(TAG, "onDetachedFromWindow: Recycled Bitmap" );
+                    Log.e(TAG, "onDetachedFromWindow: Recycled Bitmap");
                     mBitmaps[i].recycle();
                 }
             }
