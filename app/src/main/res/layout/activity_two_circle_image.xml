@@ -7,10 +7,6 @@
     android:orientation="vertical"
     tools:context="com.example.nguyennghia.circleimageview.TwoCircleImageActivity">
 
-    <!--<com.example.nguyennghia.circleimageview.CircleImage-->
-    <!--android:id="@+id/ci_two_image"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
 
     <com.example.nguyennghia.circleimageview.DialogItemView
         android:id="@+id/cv_two_image"
@@ -27,18 +23,5 @@
         app:unread_text_size="@dimen/dialog_item_view_text_unread_font_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-
-    <!--<com.example.nguyennghia.circleimageview.CustomView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="NguyenNghia"-->
-    <!--android:textStyle="bold"-->
-    <!--android:textColor="@android:color/black"-->
-    <!--android:textSize="@dimen/font_demo" />-->
 
 </LinearLayout>

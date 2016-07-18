@@ -12,6 +12,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DialogItemView messageViewv = new DialogItemView(this);
+
     }
 
     public void onClick(View v) {
@@ -19,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, ListViewCircleImageTestActivity.class));
         else if (v.getId() == R.id.btn_chat_view)
             startActivity(new Intent(this, ChatViewTestActivity.class));
-        else if (v.getId() == R.id.btn_ui_test)
-            startActivity(new Intent(this, TestActivity.class));
         else if (v.getId() == R.id.btn_two_image)
             startActivity(new Intent(this, TwoCircleImageActivity.class));
     }

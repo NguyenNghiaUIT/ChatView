@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
 /**
@@ -22,13 +23,14 @@ import java.util.List;
  */
 
 public class DialogItemView extends View {
-    private static final String TAG = "ChatView";
+    private static final String TAG = "DialogItemView";
 
     private static final short ALPHA_DEFAULT = 255;
     private static final int ANIMATION_DURATION = 300;
     private static final int TIME_REFESH = 10;
     private static final int ALPHA_STEP = ALPHA_DEFAULT / (ANIMATION_DURATION / TIME_REFESH);
 
+    private static final int VALUE_INVALID = -1;
     public static final int AVATAR_ONE_BITMAP = 0;
     public static final int AVATAR_ONE_BITMAP_AND_TEXT = 1;
     public static final int AVATAR_TWO_BITMAP = 2;
@@ -91,7 +93,6 @@ public class DialogItemView extends View {
     private Paint mDividerPaint;
     private int mDividerHeight;
     private int mDividerColor;
-    private boolean mIsDrawDivider;
 
     private float mHeightDraw;
     private String mTotalMemberText;
@@ -140,7 +141,7 @@ public class DialogItemView extends View {
     private Rect mRectBoundText;
     private Rect mItemAvatarBoxBound = new Rect();
 
-    private int mAvatarType;
+    private int mAvatarType = VALUE_INVALID;
 
     public DialogItemView(Context context) {
         this(context, null);
@@ -242,11 +243,8 @@ public class DialogItemView extends View {
     }
 
     public void setDefaultDrawable(Drawable drawableDefault) {
-        if (drawableDefault != null && drawableDefault != mDrawableDefault0) {
-            mDrawableDefault0 = drawableDefault;
-            mDrawableDefault1 = drawableDefault.getConstantState().newDrawable();
-            mDrawableDefault2 = drawableDefault.getConstantState().newDrawable();
-            mDrawableDefault3 = drawableDefault.getConstantState().newDrawable();
+        if (drawableDefault != null) {
+            mDrawableDefault0 = mDrawableDefault1 = mDrawableDefault2 = mDrawableDefault3 = drawableDefault;
             invalidate();
         }
     }
@@ -273,13 +271,12 @@ public class DialogItemView extends View {
     public void reset() {
         mCurrentDrawable0 = mCurrentDrawable1 = mCurrentDrawable2 = mCurrentDrawable3 = ALPHA_DEFAULT;
         mCurrentBitmapAlpha0 = mCurrentBitmapAlpha1 = mCurrentBitmapAlpha2 = mCurrentBitmapAlpha3 = 0;
-        mIsDrawBitmap0 = mIsDrawBitmap1 = mIsDrawBitmap2 = mIsDrawBitmap3 = false;
+        mIsDrawBitmap0 = mIsDrawBitmap1 = mIsDrawBitmap2 = mIsDrawBitmap3 = mIsDrawUnRead = false;
         mIsAnimation0 = mIsAnimation1 = mIsAnimation2 = mIsAnimation3 = false;
-        mIsDrawUnRead = mIsDrawDivider = false;
-        mUnReadText = null;
-        mTitleText = mContentText = mStatusText = null;
-        mTotalMemberText = null;
 
+        mTitleText = mContentText = mStatusText = mUnReadText = mTotalMemberText = null;
+
+        mAvatarType = VALUE_INVALID;
         if (mBitmaps != null) {
             int size = mBitmaps.length;
             for (int i = 0; i < size; i++) {
@@ -374,91 +371,98 @@ public class DialogItemView extends View {
         }
     }
 
-    public void setBitmapUrls(List<String> urls) {
-        if (urls != null && urls.size() > 0) {
-            mSize = urls.size();
-            configWidthAndHeightCircleImage();
-        }
-    }
-
-    public void setBitmapUrls(String... urls) {
-        if (urls != null && urls.length > 0) {
-            mSize = urls.length;
-            configWidthAndHeightCircleImage();
-        }
-    }
-
-    //Method only using for draw one bitmap and text
-    public void setBitmapUrl(String url, String text) {
-        if (url != null) {
-            mSize = 1;
-            mBitmaps = new Bitmap[1];
-            mBitmapPaints = new Paint[1];
-            mBitmapPaints[0] = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mBitmapPaints[0].setAlpha(0);
-
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_2_avatar);
-            mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
-
-            if (mTotalMemberPaint == null) {
-                mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                mTotalMemberPaint.setColor(mTotalMemberColor);
+    public void setBitmapUrl(String text, String... urls) {
+        if (urls != null) {
+            if (urls.length <= 4 && mSize != urls.length) {
+                mSize = urls.length;
+                mBitmapPaints = new Paint[mSize];
+                mBitmaps = new Bitmap[mSize];
+                for (int i = 0; i < mSize; i++) {
+                    mBitmapPaints[i] = new Paint();
+                    mBitmapPaints[i].setAlpha(0);
+                }
             }
-            if (mTotalMemberTextPaint == null) {
-                mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-                mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
-                mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
-            }
-            mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
-            if (!TextUtils.isEmpty(text))
+
+            if (!TextUtils.isEmpty(text)) {
                 mTotalMemberText = text;
-        }
+                if (mTotalMemberPaint == null) {
+                    mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    mTotalMemberPaint.setColor(mTotalMemberColor);
+                }
 
+                if (mTotalMemberTextPaint == null) {
+                    mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+                    mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
+                    mTotalMemberTextPaint.setTypeface(Typeface.create(mTotalMemberTextPaint.getTypeface(), Typeface.BOLD));
+                    mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
+                }
+            }
+        }
+        configWidthAndHeightAvatarBox();
+        invalidate();
     }
 
-    private void configWidthAndHeightCircleImage() {
-        int size = mSize > 4 ? 3 : mSize;
-        mBitmapPaints = new Paint[size];
-        for (int i = 0; i < size; i++) {
-            mBitmaps = new Bitmap[size];
-            mBitmapPaints[i] = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mBitmapPaints[i].setAlpha(0);
-        }
 
+    public void setBitmapUrls(String text, List<String> urls) {
+        if (urls != null) {
+            if (urls.size() <= 4 && mSize != urls.size()) {
+                mSize = urls.size();
+                mBitmapPaints = new Paint[mSize];
+                mBitmaps = new Bitmap[mSize];
+                for (int i = 0; i < mSize; i++) {
+                    mBitmapPaints[i] = new Paint();
+                    mBitmapPaints[i].setAlpha(0);
+                }
+            }
+
+            if (!TextUtils.isEmpty(text)) {
+                mTotalMemberText = text;
+                if (mTotalMemberPaint == null) {
+                    mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    mTotalMemberPaint.setColor(mTotalMemberColor);
+                }
+
+                if (mTotalMemberTextPaint == null) {
+                    mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+                    mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
+                    mTotalMemberTextPaint.setTypeface(Typeface.create(mTotalMemberTextPaint.getTypeface(), Typeface.BOLD));
+                    mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
+                }
+            }
+        }
+        configWidthAndHeightAvatarBox();
+        invalidate();
+    }
+
+
+    private void configWidthAndHeightAvatarBox() {
         if (mSize == 1) {
-            mItemAvatarWidth = mItemAvatarHeight = mAvatarBoxWidth;
-            mAvatarType = AVATAR_ONE_BITMAP;
-        } else if (mSize == 2) {
+            if (mTotalMemberText == null) {
+                mItemAvatarWidth = mItemAvatarHeight = mAvatarBoxWidth;
+                mAvatarType = AVATAR_ONE_BITMAP;
+            } else {
+                mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_2_avatar);
+                mAvatarType = AVATAR_ONE_BITMAP_AND_TEXT;
+            }
+        } else if (mSize == 2 && mTotalMemberText == null) {
             mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_2_avatar);
             mAvatarType = AVATAR_TWO_BITMAP;
         } else if (mSize == 3) {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
-            mAvatarType = AVATAR_THREE_BITMAP;
-            mHeightDraw = getResources().getDimension(R.dimen.dialog_item_view_height_bound_case_3_avatar);
-        } else if (mSize == 4) {
+            if (mTotalMemberText == null) {
+                mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
+                mAvatarType = AVATAR_THREE_BITMAP;
+                mHeightDraw = getResources().getDimension(R.dimen.dialog_item_view_height_bound_case_3_avatar);
+            } else {
+                mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
+                mAvatarType = AVATAR_THREE_BITMAP_AND_TEXT;
+            }
+        } else if (mSize == 4 && mTotalMemberText == null) {
             mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
             mAvatarType = AVATAR_FOUR_BITMAP;
-        } else {
-            mItemAvatarWidth = mItemAvatarHeight = getResources().getDimension(R.dimen.dialog_item_view_height_item_3_avatar);
-            mAvatarType = AVATAR_THREE_BITMAP_AND_TEXT;
         }
-
         mItemAvatarBoxBound.set(0, 0, (int) mItemAvatarWidth, (int) mItemAvatarHeight);
-
-        if (mSize > 4) {
-            if (mTotalMemberPaint == null) {
-                mTotalMemberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                mTotalMemberPaint.setColor(mTotalMemberColor);
-            }
-            if (mTotalMemberTextPaint == null) {
-                mTotalMemberTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-                mTotalMemberTextPaint.setTextSize(mTotalMemberTextSize);
-                mTotalMemberTextPaint.setColor(mTotalMemberTextColor);
-            }
-            mTotalMemberText = String.valueOf(mSize);
-        }
-        invalidate();
     }
+
 
     public void setDrawTypeTotalMember(int type) {
         if (type != TOTAL_MEMBER_CIRCLE && type != TOTAL_MEMBER_SQUARE)
@@ -545,7 +549,6 @@ public class DialogItemView extends View {
         // TODO: 29/06/2016 Draw Title
         if (mTitleText != null) {
             // Log.i(TAG, "onDraw: Draw Title");
-            mIsDrawDivider = true;
             str = TextUtils.ellipsize(mTitleText, mTitlePaint, availableWidth - mTitleMarginLeft, TextUtils.TruncateAt.END);
             mTitlePaint.getTextBounds(mTitleText, 0, mTitleText.length(), mRectBoundText);
             canvas.drawText(str, 0, str.length(), mTitleMarginLeft, getPaddingTop() + mRectBoundText.height() + mTitleMarginTop, mTitlePaint);
@@ -557,8 +560,8 @@ public class DialogItemView extends View {
             canvas.drawText(str, 0, str.length(), mContentMarginLeft, getHeight() - mContentPaint.descent() - getPaddingBottom() - mContentMarginBottom, mContentPaint);
         }
 
-        // TODO: 04/07/2016  Draw Divider ChatView
-        if (mIsDrawDivider) {
+        // TODO: 04/07/2016  Draw Divider DialogItemView
+        if (!TextUtils.isEmpty(mTitleText) || !TextUtils.isEmpty(mContentText)) {
             if (mDividerPaint == null) {
                 mDividerPaint = new Paint();
                 mDividerPaint.setStrokeWidth(mDividerHeight);
@@ -579,7 +582,7 @@ public class DialogItemView extends View {
             postInvalidateDelayed(TIME_REFESH);
         }
 
-        Log.e(TAG, "onDraw: Total Time: " + (System.nanoTime() - startTime));
+        //Log.e(TAG, "onDraw: Total Time: " + (System.nanoTime() - startTime));
     }
 
     private void drawAvatarBox(Canvas canvas) {
@@ -587,60 +590,57 @@ public class DialogItemView extends View {
         float radius;
         float tranX;
         float tranY;
-        if (mSize == 1) {
-            // TODO: 06/07/2016 Case1: 1 Bitmap
-            if (mTotalMemberText == null) {
-                if (!mIsDrawBitmap0) {
-                    if (mDrawableDefault0 != null) {
-                        mDrawableDefault0.setBounds(mItemAvatarBoxBound);
-                        mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
-                        mDrawableDefault0.draw(canvas);
-                    }
-                } else {
-                    if (mIsAnimation0) {
-                        processAnimationBitmap0(canvas, 0, 0);
-                    } else {
-                        mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
-                        canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
-                    }
+        if (mAvatarType == AVATAR_ONE_BITMAP) { // TODO: 06/07/2016 Case1: 1 Bitmap
+            if (!mIsDrawBitmap0) {
+                if (mDrawableDefault0 != null) {
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
+                    mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
+                    mDrawableDefault0.draw(canvas);
                 }
-                // TODO: 06/07/2016 Case 2: 1 bitmap and 1 text
             } else {
-                radius = mItemAvatarWidth / 2.0f;
-                tranX = mAvatarBoxWidth - mItemAvatarWidth;
-                tranY = mAvatarBoxHeight - mItemAvatarHeight;
-
-                if (!mIsDrawBitmap0) {
-                    canvas.translate(tranX, 0);
-                    if (mDrawableDefault0 != null) {
-                        mDrawableDefault0.setBounds(mItemAvatarBoxBound);
-                        mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
-                        mDrawableDefault0.draw(canvas);
-                    }
+                if (mIsAnimation0) {
+                    processAnimationBitmap0(canvas, 0, 0);
                 } else {
-                    if (mIsAnimation0) {
-                        processAnimationBitmap0(canvas, tranX, tranY);
-                    } else {
-                        mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
-                        canvas.translate(tranX, 0);
-                        canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
-                    }
+                    mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
                 }
-
-                float widthTextMeasure = mTotalMemberTextPaint.measureText(mTotalMemberText, 0, mTotalMemberText.length());
-                if (mRectBoundText == null)
-                    mRectBoundText = new Rect();
-                mTotalMemberTextPaint.getTextBounds(mTotalMemberText, 0, mTotalMemberText.length(), mRectBoundText);
-                canvas.translate(-tranX, tranY);
-                if (mTotalMemberDrawType == TOTAL_MEMBER_CIRCLE)
-                    canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
-                else
-                    canvas.drawRect(mItemAvatarBoxBound, mTotalMemberPaint);
-                canvas.drawText(mTotalMemberText, radius - (widthTextMeasure / 2), radius + mRectBoundText.height() / 2, mTotalMemberTextPaint);
-                canvas.translate(0, -tranY);
             }
-            // TODO: 06/07/2016 Case 3: 2 bitmap
-        } else if (mSize == 2) {
+
+        } else if (mAvatarType == AVATAR_ONE_BITMAP_AND_TEXT) { // TODO: 06/07/2016 Case 2: 1 bitmap and 1 text
+            radius = mItemAvatarWidth / 2.0f;
+            tranX = mAvatarBoxWidth - mItemAvatarWidth;
+            tranY = mAvatarBoxHeight - mItemAvatarHeight;
+
+            if (!mIsDrawBitmap0) {
+                canvas.translate(tranX, 0);
+                if (mDrawableDefault0 != null) {
+                    mDrawableDefault0.setBounds(mItemAvatarBoxBound);
+                    mDrawableDefault0.setAlpha(ALPHA_DEFAULT);
+                    mDrawableDefault0.draw(canvas);
+                }
+            } else {
+                if (mIsAnimation0) {
+                    processAnimationBitmap0(canvas, tranX, tranY);
+                } else {
+                    mBitmapPaints[0].setAlpha(ALPHA_DEFAULT);
+                    canvas.translate(tranX, 0);
+                    canvas.drawBitmap(mBitmaps[0], null, mItemAvatarBoxBound, mBitmapPaints[0]);
+                }
+            }
+
+            float widthTextMeasure = mTotalMemberTextPaint.measureText(mTotalMemberText, 0, mTotalMemberText.length());
+            if (mRectBoundText == null)
+                mRectBoundText = new Rect();
+            mTotalMemberTextPaint.getTextBounds(mTotalMemberText, 0, mTotalMemberText.length(), mRectBoundText);
+            canvas.translate(-tranX, tranY);
+            if (mTotalMemberDrawType == TOTAL_MEMBER_CIRCLE)
+                canvas.drawCircle(radius, radius, radius, mTotalMemberPaint); //right bottom
+            else
+                canvas.drawRect(mItemAvatarBoxBound, mTotalMemberPaint);
+            canvas.drawText(mTotalMemberText, radius - (widthTextMeasure / 2), radius + mRectBoundText.height() / 2, mTotalMemberTextPaint);
+            canvas.translate(0, -tranY);
+
+        } else if (mAvatarType == AVATAR_TWO_BITMAP) {  // TODO: 06/07/2016 Case 3: 2 bitmap
             tranX = mAvatarBoxWidth - mItemAvatarWidth;
             tranY = mAvatarBoxHeight - mItemAvatarHeight;
             if (!mIsDrawBitmap0) {
@@ -677,7 +677,7 @@ public class DialogItemView extends View {
             }
             canvas.translate(0, -tranY);
             // TODO: 06/07/2016  Case 4: Draw 3 bitmap
-        } else if (mSize == 3) {
+        } else if (mAvatarType == AVATAR_THREE_BITMAP) {
             radius = mItemAvatarWidth / 2.0f;
             tranX = (mAvatarBoxWidth / 2) - radius;
             tranY = (mAvatarBoxHeight - mHeightDraw) / 2.0f;
@@ -733,8 +733,8 @@ public class DialogItemView extends View {
                 }
             }
             canvas.translate(-(mAvatarBoxWidth - mItemAvatarWidth), -(mItemAvatarHeight - tranY) - ((mAvatarBoxHeight - mHeightDraw) / 2.0f));
-            // TODO: 06/07/2016 case 5: Draw 4 bitmap
-        } else if (mSize == 4) {
+
+        } else if (mAvatarType == AVATAR_FOUR_BITMAP) {   // TODO: 06/07/2016 case 5: Draw 4 bitmap
             tranX = mAvatarBoxWidth - mItemAvatarWidth;
             tranY = mAvatarBoxHeight - mItemAvatarHeight;
 
@@ -802,8 +802,8 @@ public class DialogItemView extends View {
                 }
             }
             canvas.translate(-tranX, -tranY);
-            // TODO: 06/07/2016 Case 5: Draw 3 bitmap and 1 text
-        } else {
+
+        } else if (mAvatarType == AVATAR_THREE_BITMAP_AND_TEXT) {  // TODO: 06/07/2016 Case 5: Draw 3 bitmap and 1 text
             radius = mItemAvatarWidth / 2.0f;
             tranX = mAvatarBoxWidth - mItemAvatarWidth;
             tranY = mAvatarBoxHeight - mItemAvatarHeight;
@@ -893,17 +893,14 @@ public class DialogItemView extends View {
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
 
-
     private void processAnimationBitmap0(Canvas canvas, float tranX, float tranY) {
-        if (mSize == 1) {
-            if (mTotalMemberText != null) {
-                canvas.translate(tranX, 0);
-            }
-        } else if (mSize == 2) {
+        Log.e(TAG, "processAnimationBitmap0: " + mAvatarType);
+        if (mAvatarType == AVATAR_ONE_BITMAP_AND_TEXT || mAvatarType == AVATAR_TWO_BITMAP) {
             canvas.translate(tranX, 0);
-        } else if (mSize == 3) {
+        } else if (mAvatarType == AVATAR_THREE_BITMAP) {
             canvas.translate(tranX, tranY);
         }
+
         if (mCurrentDrawable0 < 0)
             mCurrentDrawable0 = 0;
 
@@ -925,11 +922,11 @@ public class DialogItemView extends View {
     }
 
     private void processAnimationBitmap1(Canvas canvas, float tranX, float tranY) {
-        if (mSize == 2) {
+        if (mAvatarType == AVATAR_TWO_BITMAP) {
             canvas.translate(-tranX, tranY);
-        } else if (mSize == 3) {
+        } else if (mAvatarType == AVATAR_THREE_BITMAP) {
             canvas.translate(-tranX, mItemAvatarHeight - tranY);
-        } else if (mSize == 4 || mSize > 4) {
+        } else if (mAvatarType == AVATAR_FOUR_BITMAP || mAvatarType == AVATAR_THREE_BITMAP_AND_TEXT) {
             canvas.translate(tranX, 0);
         }
 
@@ -955,9 +952,9 @@ public class DialogItemView extends View {
     }
 
     private void processAnimationBitmap2(Canvas canvas, float tranX, float tranY) {
-        if (mSize == 3) {
+        if (mAvatarType == AVATAR_THREE_BITMAP) {
             canvas.translate(mAvatarBoxWidth - mItemAvatarWidth, 0);
-        } else if (mSize == 4 || mSize > 4) {
+        } else if (mAvatarType == AVATAR_FOUR_BITMAP || mAvatarType == AVATAR_THREE_BITMAP_AND_TEXT) {
             canvas.translate(-tranX, tranY);
         }
 
@@ -984,7 +981,7 @@ public class DialogItemView extends View {
     }
 
     private void processAnimationBitmap3(Canvas canvas, float tranX, float tranY) {
-        if (mSize == 4) {
+        if (mAvatarType == AVATAR_FOUR_BITMAP) {
             if (mCurrentDrawable3 < 0)
                 mCurrentDrawable3 = 0;
             canvas.translate(tranX, 0);

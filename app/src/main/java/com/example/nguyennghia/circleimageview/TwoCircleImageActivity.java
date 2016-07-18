@@ -2,13 +2,14 @@ package com.example.nguyennghia.circleimageview;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 public class TwoCircleImageActivity extends AppCompatActivity {
-    DialogItemView circleImage;
+    DialogItemView messageView;
     private static final String TAG = "TwoCircleImageActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,19 +19,19 @@ public class TwoCircleImageActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: " + savedInstanceState);
         final Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ava1);
 
-        circleImage = (DialogItemView) findViewById(R.id.cv_two_image);
-        circleImage.setBitmapUrl("url", "1");
-        CircleBitmapDrawable circleBitmapDrawable = new CircleBitmapDrawable(BitmapFactory.decodeResource(getResources(), R.drawable.default_ava));
-        ColorDrawable circleColorDrawable = new ColorDrawable(getResources().getColor(R.color.colorAccent));
-        circleImage.setDefaultDrawable(circleColorDrawable);
-        circleImage.setUnreadText("N");
+        messageView = (DialogItemView) findViewById(R.id.cv_two_image);
+        messageView.setBitmapUrl("1", "url");
+//        messageView.setDrawTypeTotalMember(DialogItemView.TOTAL_MEMBER_SQUARE);
+        CircleColorDrawable circleColorDrawable = new CircleColorDrawable(Color.parseColor("#16a085"));
+        messageView.setDefaultDrawable(circleColorDrawable);
+        messageView.setUnreadText("N");
 
-        circleImage.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                circleImage.setBitmapAt(bm, 0, true);
-            }
-        }, 1000);
+//        messageView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                messageView.setBitmapAt(bm, 0, true);
+//            }
+//        }, 1000);
 
     }
 

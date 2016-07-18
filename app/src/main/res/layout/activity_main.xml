@@ -20,13 +20,7 @@
         android:text="ChatViewTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    
-    <Button
-        android:id="@+id/btn_ui_test"
-        android:text="UITest"
-        android:onClick="onClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btn_two_image"
         android:text="TwoCircleImageTest"

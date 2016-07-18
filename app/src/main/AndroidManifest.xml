@@ -23,7 +23,6 @@
         <activity android:name=".SingleCircleImageTestActivity" />
         <activity android:name=".TwoCircleImageActivity"></activity>
         <activity android:name=".ChatViewTestActivity" />
-        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.example.nguyennghia.circleimageview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -31,18 +32,17 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
     private static final String TAG = "ChatViewAdapter";
     private Context mContext;
     private List<ChatInfo> mChatInfos;
-    private CircleColorDrawable mCircleColorDrawable;
     private ColorDrawable mColorDrawable;
+    private CircleColorDrawable circleColorDrawable;
     private BitmapDrawable mNotifyDrawable;
     private BitmapDrawable mFailDrawable;
-    // private CircleBitmapDrawable mCircleBitmapDrawable;
 
     public ChatViewAdapter(Context context, List<ChatInfo> objects) {
         super(context, 0, objects);
         mContext = context;
         mChatInfos = objects;
-        mCircleColorDrawable = new CircleColorDrawable(context.getResources().getColor(R.color.colorAccent));
         mColorDrawable = new ColorDrawable(context.getResources().getColor(R.color.colorPrimary));
+        circleColorDrawable = new CircleColorDrawable(Color.parseColor("#16a085"));
         mNotifyDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.notify));
         mFailDrawable = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.fail));
     }
@@ -58,101 +58,56 @@ public class ChatViewAdapter extends ArrayAdapter<ChatInfo> {
             LayoutInflater li = LayoutInflater.from(mContext);
             convertView = li.inflate(R.layout.author_row_item, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.ciAvaAuthor = (DialogItemView) convertView.findViewById(R.id.ci_ava_author);
+            viewHolder.messageView = (DialogItemView) convertView.findViewById(R.id.ci_ava_author);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.ciAvaAuthor.reset();
+            viewHolder.messageView.reset();
         }
 
-        viewHolder.ciAvaAuthor.setBitmapUrls(picture.getUrls());
-        viewHolder.ciAvaAuthor.setUnreadText("2");
+        viewHolder.messageView.setBitmapUrls(picture.getTotalMemberText(), picture.getUrls());
+        viewHolder.messageView.setUnreadText("2");
 
-        viewHolder.ciAvaAuthor.setTitle(chatInfo.getTitle());
-        viewHolder.ciAvaAuthor.setContent(chatInfo.getContent());
-        viewHolder.ciAvaAuthor.setStatus(chatInfo.getStatus());
-        viewHolder.ciAvaAuthor.setStatusTextBold(false);
-        viewHolder.ciAvaAuthor.setTitleTextBold(true);
-        viewHolder.ciAvaAuthor.setContentTextBold(false);
+        viewHolder.messageView.setTitle(picture.getTotalMemberText());
+        viewHolder.messageView.setContent(picture.getUrls().size() + "");
+        viewHolder.messageView.setStatus(chatInfo.getStatus());
+        viewHolder.messageView.setStatusTextBold(false);
+        viewHolder.messageView.setTitleTextBold(true);
+        viewHolder.messageView.setContentTextBold(false);
 
-        viewHolder.ciAvaAuthor.setIconNotifyDrawable(mNotifyDrawable);
-        viewHolder.ciAvaAuthor.setIconFailDrawable(mFailDrawable);
-        viewHolder.ciAvaAuthor.setDefaultDrawable(mColorDrawable);
-        viewHolder.ciAvaAuthor.setDrawTypeTotalMember(DialogItemView.TOTAL_MEMBER_SQUARE);
+        viewHolder.messageView.setIconNotifyDrawable(mNotifyDrawable);
+        viewHolder.messageView.setIconFailDrawable(mFailDrawable);
+        viewHolder.messageView.setDefaultDrawable(circleColorDrawable);
 
-        int size = picture.getUrls().size() > 4 ? 3 : picture.getUrls().size();
-        for (int i = 0; i < size; i++) {
-            if (!picture.getLoadeds()[i]) {
-                Bitmap bitmap = ZaloAvatarManager.getBitmap(picture.getUrls().get(i));
-                if (bitmap == null)
-                    picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), false), i);
-                else {
-                    if (bitmap.isRecycled())
-                        picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), true), i);
-                    else
-                        picture.setBitmap(bitmap, i);
-                }
-                picture.getLoadeds()[i] = true;
-            }
+//        int size = picture.getUrls().size();
+//        for (int i = 0; i < size; i++) {
+//            if (!picture.getLoadeds()[i]) {
+//                Bitmap bitmap = ZaloAvatarManager.getBitmap(picture.getUrls().get(i));
+//                if (bitmap == null)
+//                    picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), false), i);
+//                else {
+//                    if (bitmap.isRecycled())
+//                        picture.setBitmap(ZaloAvatarManager.decodeBitmapFromFile(picture.getUrls().get(i), true), i);
+//                    else
+//                        picture.setBitmap(bitmap, i);
+//                }
+//                picture.getLoadeds()[i] = true;
+//            }
+//
+//            if (picture.getIsAnimation()[i]) {
+//                viewHolder.messageView.setBitmapAt(picture.getBitmaps()[i], i, true);
+//                picture.getIsAnimation()[i] = false;
+//            } else {
+//                viewHolder.messageView.setBitmapAt(picture.getBitmaps()[i], i, false);
+//            }
+//        }
 
-            if (picture.getIsAnimation()[i]) {
-                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, true);
-                picture.getIsAnimation()[i] = false;
-            } else {
-                viewHolder.ciAvaAuthor.setBitmapAt(picture.getBitmaps()[i], i, false);
-            }
-        }
+
         return convertView;
     }
 
 
     static class ViewHolder {
-        private DialogItemView ciAvaAuthor;
+        private DialogItemView messageView;
     }
-
-    class DownloadAvatarBoxTask extends AsyncTask<Picture, Void, Void> {
-        private Picture picture;
-        private List<Bitmap> bitmaps = new ArrayList<>();
-        private int size;
-
-        @Override
-        protected Void doInBackground(Picture... params) {
-            picture = params[0];
-            List<String> url = picture.getUrls();
-            size = url.size() > 4 ? 3 : url.size();
-            for (int i = 0; i < size; i++) {
-                Bitmap bm = null;
-                try {
-                    if (picture.getLoadeds()[i]) {
-                        bm = picture.getBitmaps()[i];
-                    } else {
-                        URL aURL = new URL(url.get(i));
-                        URLConnection conn = aURL.openConnection();
-                        conn.connect();
-                        InputStream is = conn.getInputStream();
-                        BufferedInputStream bis = new BufferedInputStream(is);
-                        bm = BitmapFactory.decodeStream(bis);
-                        bis.close();
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bitmaps.add(bm);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
-            for (int i = 0; i < size; i++) {
-                Bitmap bm = bitmaps.get(i);
-                if (!picture.getLoadeds()[i] && bm != null) {
-                    picture.setBitmap(bm, i);
-                }
-            }
-        }
-    }
-
 }

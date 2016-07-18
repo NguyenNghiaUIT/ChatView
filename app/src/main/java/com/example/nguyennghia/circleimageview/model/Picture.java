@@ -15,7 +15,7 @@ public class Picture {
     private Bitmap[] mBitmaps;
     private boolean[] mLoadeds;
     private boolean[] mAnimations;
-    private OnDownloadBitmap mListener;
+    private String mTotalMemberText;
 
     public interface OnDownloadBitmap {
         void onSuscess(Bitmap bitmap, int index, int size);
@@ -25,10 +25,6 @@ public class Picture {
         mUrls = new ArrayList<>();
     }
 
-
-    public void setOnDownloadBitmapListener(OnDownloadBitmap listener) {
-        mListener = listener;
-    }
 
     public Bitmap[] getBitmaps() {
         return mBitmaps;
@@ -42,36 +38,35 @@ public class Picture {
         return mLoadeds;
     }
 
-    public void setBitmap(Bitmap bimap, int index) {
-        mLoadeds[index] = true;
-        if (mBitmaps[index] != bimap)
-            mBitmaps[index] = bimap;
-        if (mListener != null)
-            mListener.onSuscess(bimap, index, mUrls.size() > 4 ? 4 : mUrls.size() - 1);
+    public void setBitmap(Bitmap bitmap, int index) {
+        if (bitmap != null){
+            mLoadeds[index] = true;
+            mBitmaps[index] = bitmap;
+        }
     }
 
-    public void setUrl(String... urls) {
+    public String getTotalMemberText(){
+        return mTotalMemberText;
+    }
+
+    public void setUrl(String text, String... urls) {
         int lenght = urls.length;
         for (String s : urls) {
             mUrls.add(s);
         }
 
-        if (lenght > 4) {
-            mBitmaps = new Bitmap[3];
-            mLoadeds = new boolean[3];
-            mAnimations = new boolean[3];
-        } else {
-            mBitmaps = new Bitmap[lenght];
-            mLoadeds = new boolean[lenght];
-            mAnimations = new boolean[lenght];
-        }
+        mBitmaps = new Bitmap[lenght];
+        mLoadeds = new boolean[lenght];
+        mAnimations = new boolean[lenght];
 
         for (int i = 0; i < mAnimations.length; i++) {
             mAnimations[i] = true;
         }
+
+        mTotalMemberText = text;
     }
 
-    public void setUrl(List<String> urls) {
+    public void setUrl(String text, List<String> urls) {
         int size = urls.size();
         this.mUrls = new ArrayList<>();
         for (int i = 0; i < size; i++) {
